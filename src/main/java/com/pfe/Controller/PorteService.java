@@ -2,10 +2,9 @@ package com.pfe.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.pfe.DTO.PorteDto;
-import com.pfe.DTO.ProfileDto;
-import com.pfe.DTO.UserDto;
 import com.pfe.entities.Porte;
 import com.pfe.entities.User;
 import com.pfe.repos.PorteRepository;
@@ -53,7 +52,14 @@ PorteDto dt;
 		return produitRepository.findById(id).get();
 
 	}*/
-
+	@GetMapping(value="/get/{id}")
+	public Porte getPorteById(@PathVariable Long id) {
+		Porte pt = new Porte();
+		Optional<Porte> p =null;
+		p= prtr.findById(id);
+		pt.setIdPorte(p.get().getIdPorte());
+		return pt;
+	}
 	@GetMapping(value="all")
 	public List<PorteDto> getAllPrt() {
 
@@ -64,5 +70,8 @@ PorteDto dt;
 			udt.add(dt.toDto((t)));
 		}
 		return udt;
+	}
+	public Optional<Porte> getbyid() {
+		return prtr.findById(1L);
 	}
 }

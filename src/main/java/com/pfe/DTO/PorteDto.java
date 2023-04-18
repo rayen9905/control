@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -25,6 +26,14 @@ public class PorteDto {
                 .NomPorte(p.getNomPorte())
                // .cntrl(p.getCntrl().getIdCont())
                 .Type(p.getType())
+                .build();
+    }
+    public static PorteDto toDtoop(Optional<Porte> p) {
+        return PorteDto.builder()
+                .IdPorte(p.get().getIdPorte())
+                .NomPorte(p.get().getNomPorte())
+                // .cntrl(p.getCntrl().getIdCont())
+                .Type(p.get().getType())
                 .build();
     }
 }

@@ -27,6 +27,10 @@ public class HistoriqueService {
 	public void addhis(@RequestBody Historique his) {
 		hisr.save(his);
 	}
+	public Long addhiss(Historique his) {
+		hisr.save(his);
+		return his.getIdHis();
+	}
 	public Historique updatehis(@RequestBody Historique h) {
 		return hisr.save(h);
 	}
@@ -52,5 +56,8 @@ public class HistoriqueService {
 	@GetMapping(value="all")
 	public List<Historique> getAllhis() {
 		return hisr.findAll();
+	}
+	public Historique getbyid(Long a) {
+		return hisr.getById(a);
 	}
 }

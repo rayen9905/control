@@ -32,6 +32,11 @@ DepartementDto dt;
 	public void adddep(@RequestBody Departement dep) {
 		depr.save(dep);
 	}
+	public void addepp(String a){
+		Departement d=new Departement();
+		d.setNomDep(a);
+		depr.save(d);
+	}
 	public Departement updatedep(@RequestBody Departement d) {
 		return depr.save(d);
 	}
