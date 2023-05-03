@@ -58,18 +58,44 @@ public class HistoriqueService {
 	public List<Historique> getAllhis() {
 		return hisr.findAll();
 	}
+	@GetMapping(value="/one/{p}")
+	public Historique gethisbyprt1(@PathVariable Long p) {
+		List<Historique>lh=hisr.findAll();
+		List<Historique>lhh=new ArrayList<>();
+		for (Historique h:lh
+		) {
+			if (h.getPrt().getIdPorte() == p) {
+				lhh.add(h);
+			}
 
+		}
+		//return lhh;
+		return lhh.get(lhh.size()-1);
+	}
 	public Historique gethisbyprt(Long p) {
 		List<Historique>lh=hisr.findAll();
 		List<Historique>lhh=new ArrayList<>();
-			for (int i =0; i <= lh.size(); i++) {
+		for (Historique h:lh
+		) {
+			if (h.getPrt().getIdPorte() == p) {
+				lhh.add(h);
+			}
+
+		}
+		//return lhh;
+		return lhh.get(lhh.size()-1);
+		}
+			/*for (int i =0; i <= lh.size(); i++) {
 				if (lh.get(i).getPrt().getIdPorte() == p) {
 					lhh.add(lh.get(i));				}
-			}
-			return lhh.get(lhh.size());
-	}
+			}*/
+
+
 
 	public Historique getbyid(Long a) {
 		return hisr.getById(a);
 	}
 }
+//controlleur/reader/
+//conncted /gedh/
+
