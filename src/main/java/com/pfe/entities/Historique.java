@@ -1,5 +1,6 @@
 package com.pfe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,10 +30,8 @@ private Porte prt;
 @ManyToOne
 @JoinColumn(name = "IdUser")
 private User usr;
+private Long IdEvent;
+private String cause;
+private String EtatHistorique;
 
-
-    public Historique(Porte p, User u) {
-        prt=p;
-        usr=u;
-    }
 }

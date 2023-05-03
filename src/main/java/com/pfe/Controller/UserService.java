@@ -77,6 +77,14 @@ public List<UserDto> getAllUsers() {
 		}
 		return udt;
 }
+	@GetMapping(value="/allu")
+	public User getAllUsersss() {
+	return usrr.findByuid("1234567899");
+	}
+	@GetMapping(value="/alll")
+	public List<User> getAllUserss() {
+		return usrr.findAll();
+	}
 	public Optional<User> getbyid() {
 		return usrr.findById(52);
 	}

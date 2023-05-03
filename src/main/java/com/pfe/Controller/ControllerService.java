@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pfe.DTO.ControllerDto;
+import com.pfe.DTO.PorteDto;
 import com.pfe.DTO.ProfileDto;
 import com.pfe.DTO.UserDto;
-import com.pfe.entities.Controlleur;
-import com.pfe.entities.Profile;
-import com.pfe.entities.User;
+import com.pfe.entities.*;
 import com.pfe.repos.ControllerRepository;
+import com.pfe.repos.HistoriqueRepository;
+import com.pfe.repos.PorteRepository;
+import com.pfe.repos.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +32,17 @@ public class ControllerService {
 
 		@Autowired(required=true)
 		ControllerRepository cntrlr;
+	@Autowired(required=true)
+	PorteRepository prtr;
+	PorteDto dtt;
+	@Autowired(required=true)
+	UserRepository usrr;
+	@Autowired(required=true)
+	HistoriqueRepository hisr;
+	UserDto dtu;
 
 		private Controlleur cnt;
+		private boolean verif;
 ControllerDto dt;
 		@PostMapping(value="/add")
 		public void addcnt(@RequestBody Controlleur cnt) {
@@ -68,5 +80,123 @@ ControllerDto dt;
 			}
 			return udt;
 		}
+	@GetMapping(value="test")
+	public Controlleur getcnttt() {
+		return cntrlr.getById(5L);
+	}
+	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
+	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable Long dr,@PathVariable String uid){
+		boolean verif1 = false;
+		String uidd;
+		String ps;
+		User u1 = null;
+		Porte ptt;
+		Historique h = new Historique();
+		try {
+			Controlleur c = cntrlr.getById(cntrl);
+			System.out.println(c.getNomCont() + "ahawa");
+		}catch(EntityNotFoundException e){
+			//return "ghalta fel controlleur";
+			Porte p = prtr.getById(dr);
+			h.setUsr(u1);
+			h.setPrt(p);
+			h.setEtatHistorique("accès refusé");
+			h.setCause("erreur du controlleur");
+			hisr.save(h);
+			return ResponseEntity.notFound().build();
 
+		}
+		try{
+			 if (uid.length()==14) {
+				uidd=uid.substring(0,10);
+				System.out.println("97 "+uidd);
+				ps=uid.substring(10,14);
+				System.out.println("99 "+ps);
+				u1 = usrr.findByuid(uidd);
+				 if(!u1.getCodePin().equals(ps)){
+					 System.out.println("98 "+u1.getCodePin());
+					 //verif=false;
+					 //return "ghalta f pin1";
+					 Porte p = prtr.getById(dr);
+					 h.setUsr(u1);
+					 h.setPrt(p);
+					 h.setCause("Utilisateur introuvable erreur du code pin");
+					 h.setEtatHistorique("accès refusé");
+					 hisr.save(h);
+					 return ResponseEntity.notFound().build();
+
+				 }
+			 }
+		}
+				catch(NullPointerException e){
+				//return "ghalta f uid1";
+					Porte p = prtr.getById(dr);
+					h.setUsr(u1);
+					h.setPrt(p);
+					h.setCause("Utilisateur introuvable erreur du code uid");
+					h.setEtatHistorique("accès refusé");
+					hisr.save(h);
+					return ResponseEntity.notFound().build();
+
+				}
+
+		try{
+		if (uid.length()==10) {
+				u1 = usrr.findByuid(uid);
+				 if (u1.getCodePin()!=null) {
+					//return "ghalta f pin2";
+					 Porte p = prtr.getById(dr);
+					 h.setUsr(u1);
+					 h.setPrt(p);
+					 h.setCause("Utilisateur introuvable erreur du code pin");
+					 h.setEtatHistorique("accès refusé");
+					 hisr.save(h);
+					 return ResponseEntity.notFound().build();
+				 }
+		}
+		}
+				catch(NullPointerException e){
+				//return "ghalta f uid2";
+					Porte p = prtr.getById(dr);
+					h.setUsr(u1);
+					h.setPrt(p);
+					h.setCause("Utilisateur introuvable erreur du code uid");
+					h.setEtatHistorique("accès refusé");
+					hisr.save(h);
+					return ResponseEntity.notFound().build();
+				}
+				Porte p = prtr.getById(dr);
+				List<Porte> pd = u1.getPrt();
+				for (Porte pt : pd
+				) {
+					if (p.getIdPorte() == pt.getIdPorte()) {
+						verif1=true;
+					}
+				}
+				if (!verif1) {
+//					return "ghalta fel beb";
+					//Porte p = prtr.getById(dr);
+					h.setUsr(u1);
+					h.setPrt(p);
+					h.setCause("Porte Non Autorisé");
+					h.setEtatHistorique("accès refusé");
+					hisr.save(h);
+					return ResponseEntity.notFound().build();
+
+				}
+		//Porte p = prtr.getById(dr);
+		h.setUsr(u1);
+		h.setPrt(p);
+		h.setCause("pas de probléme");
+		h.setEtatHistorique("access accepté");
+		hisr.save(h);
+		//return "haw s7ii7 mara7be";
+		return ResponseEntity.ok().build();
+
+
+	}
+	///////// sawer el materiellllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+	// amélioration de pris de décision
+//liason entrehistorique et event
+	// architecture d'envoi en des alarms et events en websocket
 }

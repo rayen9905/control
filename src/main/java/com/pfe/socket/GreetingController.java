@@ -18,4 +18,11 @@ public class GreetingController {
        // der.addepp(message);
         return new Greeting("Hello, " + message+ "!");
     }
+   /* @MessageMapping("/hello")
+    @SendTo("/topic/greetings")
+    public Greeting greeting1(@Payload String message) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        // der.addepp(message);
+        return new Greeting("Hello, " + message+ "!");
+    }*/
 }

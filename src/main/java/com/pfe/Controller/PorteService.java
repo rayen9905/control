@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pfe.DTO.PorteDto;
+import com.pfe.entities.Lecteur;
 import com.pfe.entities.Porte;
 import com.pfe.entities.User;
 import com.pfe.repos.PorteRepository;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PorteService {
 	@Autowired(required=true)
 	PorteRepository prtr;
-PorteDto dt;
+static PorteDto dt;
 	private Porte prt;
 
 	@PostMapping(value="/add")
@@ -41,7 +42,16 @@ PorteDto dt;
 	    updateporte(porte);
 	    return ResponseEntity.ok().build();
 	  }
-
+	@GetMapping(value="/getadr1")
+	public PorteDto getbyadr1(){
+		Porte p= prtr.findByadresse("9ca525b998e4");
+		return dt.toDto(p);
+	  }
+	@GetMapping(value="/getadr")
+	public Porte getbyadr(String mac){
+		Porte p= prtr.findByadresse(mac);
+		return p;
+	}
 	@DeleteMapping(value="/delete/{id}")
 	public void deletePorteById(@PathVariable Long id) {
 		prtr.deleteById(id);
@@ -60,7 +70,7 @@ PorteDto dt;
 		pt.setIdPorte(p.get().getIdPorte());
 		return pt;
 	}
-	@GetMapping(value="all")
+	@GetMapping(value="/all")
 	public List<PorteDto> getAllPrt() {
 
 		List<Porte> u= new ArrayList<>();
@@ -73,5 +83,9 @@ PorteDto dt;
 	}
 	public Optional<Porte> getbyid() {
 		return prtr.findById(1L);
+	}
+	@GetMapping(value="/get-all")
+	public List<Porte> getbyidd() {
+		return prtr.findAll();
 	}
 }

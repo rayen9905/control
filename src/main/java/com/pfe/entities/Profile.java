@@ -2,6 +2,7 @@ package com.pfe.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "Profile")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Profile {
 	
 	@Id
@@ -27,31 +29,7 @@ public class Profile {
 	@Column(name = "NomProfile", length = 50)
 	private String NomProfile;
 	@OneToMany(mappedBy="prof")
+	@JsonIgnoreProperties("prof")
 	private List<User> usr;
-/*
-	public Long getIdProf() {
-		return IdProf;
-	}
 
-	public void setIdProf(Long idProf) {
-		IdProf = idProf;
-	}
-
-	public String getNomProfile() {
-		return NomProfile;
-	}
-
-	public void setNomProfile(String nomProfile) {
-		NomProfile = nomProfile;
-	}
-
-	public List<User> getUsr() {
-		return usr;
-	}
-
-	public void setUsr(List<User> usr) {
-		this.usr = usr;
-	}
-
- */
 }

@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@ServerEndpoint("/websocket")
-public class EchoWebSocketEndpoint {
+@ServerEndpoint("/websocket/client1")
+public class websocketserver1 {
     private static List<Session> sessions = new ArrayList<>();
 
     @OnOpen
     public void onOpen(Session session) {
         sessions.add(session);
-        System.out.println("New connection opened: " + session.getId());
+        System.out.println("New connection opened in server client1: " + session.getId());
     }
 
     @OnMessage

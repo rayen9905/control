@@ -1,25 +1,27 @@
 package com.pfe.DTO;
 
 import com.pfe.entities.Lecteur;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class LecteurDto {
     private Long IdLecteur;
     private String IpAdresse;
-    private Long prt;
+    private PorteDto prt;
 
+    static PorteDto dt;
     public static LecteurDto toDto(Lecteur l) {
+        PorteDto pd= dt.toDto(l.getPrt());
+
         return LecteurDto.builder()
                 .IdLecteur(l.getIdLecteur())
                 .IpAdresse(l.getIpAdresse())
-                .prt(l.getPrt().getIdPorte())
+                .prt(pd)
                 .build();
     }
 }

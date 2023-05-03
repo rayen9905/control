@@ -1,27 +1,25 @@
 package com.pfe.entities;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 @Setter
 @Entity
 @Table(name="Porte")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Porte {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)//Auto increment
@@ -29,16 +27,24 @@ public class Porte {
 	
 	@Column(name = "Nom_Porte", length = 50)
 	private String NomPorte;
-	
-	@OneToMany(mappedBy="prt")
-	private List<Lecteur>lecteur;
-	
-	@ManyToOne
-	private Controlleur cntrl;
-	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "Type", length = 50, nullable = false)
 	private TypePorte Type;
+	
+	@OneToMany(mappedBy="prt",cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties("prt")
+	private List<Lecteur> lecteur= new ArrayList<>();
 
+	@ManyToOne
+	@JsonIgnoreProperties("porte")
+	private Departement dep;
+
+	@ManyToMany
+	@JsonIgnoreProperties("prt")
+	private List<User> usr;
+
+	@OneToOne
+	@JsonIgnoreProperties("prt")
+	private WaveShare wsh;
 	
 }

@@ -52,7 +52,10 @@ LecteurDto dt;
 		return produitRepository.findById(id).get();
 
 	}*/
-
+	@GetMapping(value="alll")
+	public List<Lecteur> getAlllecss() {
+		return lecr.findAll();
+	}
 	@GetMapping(value="all")
 	public List<LecteurDto> getAlllecs() {
 

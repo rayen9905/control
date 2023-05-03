@@ -1,5 +1,6 @@
 package com.pfe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @Entity
 @Table(name = "user")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
 
   @Id
@@ -34,8 +36,10 @@ public class User implements UserDetails {
   @Column(name = "password")
 
   private String password;
-  @Column(name = "Code", length = 50)
-  private String Code;
+  @Column(name = "CodePin", length = 50)
+  private String CodePin;
+  @Column(name = "CodeUid", length = 50)
+  private String CodeUid;
   @Column(name = "Phone", length = 50)
   private String Phone;
   @Column(name = "Address", length = 200)
@@ -43,10 +47,13 @@ public class User implements UserDetails {
   @Column(name = "Image", length = 300)
   private String Image;
   @ManyToOne
+  @JsonIgnoreProperties("usr")
   private Profile prof;
-  @ManyToOne
-  private Departement depar;
+ @ManyToMany
+ @JsonIgnoreProperties("usr")
+ private List<Porte> prt;
   @OneToMany(mappedBy = "user")
+  @JsonIgnoreProperties("user")
   private List<Token> tokens;
   @Enumerated(EnumType.STRING)
   private Role role;

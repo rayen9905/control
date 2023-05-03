@@ -1,27 +1,21 @@
 package com.pfe.socket1;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pfe.entities.Historique;
 import jakarta.websocket.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-//@Component
+
 @ClientEndpoint
-public class WebSocketClient {
+public class client1 {
     private Session session;
 
-    public WebSocketClient() throws URISyntaxException, IOException, DeploymentException {
+    public client1() throws URISyntaxException, IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        URI uri = new URI("ws://localhost:8080/websocket");
+        URI uri = new URI("ws://localhost:8080/websocket/client1");
         container.connectToServer(this, uri);
     }
 
@@ -54,12 +48,12 @@ public class WebSocketClient {
     }
     public static void main(String[] args) throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
-        WebSocketClient client = new WebSocketClient();
+        client1 client = new client1();
         //client.connect("ws://localhost:8080/websocket"); // replace with your endpoint URL
-         while (true) {
-        client.sendMessage("Hello, server!");
-        latch.await(3, TimeUnit.SECONDS);
-        //   client.session.close();
+        while (true) {
+            client.sendMessage("Hello, server!");
+            latch.await(3, TimeUnit.SECONDS);
+            //   client.session.close();
 
         }
     }

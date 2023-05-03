@@ -2,6 +2,7 @@ package com.pfe.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,7 +23,9 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name ="Controlleur")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Controlleur {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -35,10 +38,8 @@ private String NomCont;
 @Column(name = "Status", length = 50, nullable = false)
 private StatuCntrl Status;
 
-@OneToMany(mappedBy="cntrl")
-private List<Porte>porte;
-
 @ManyToOne
+@JsonIgnoreProperties("cntrls")
 private Departement dept;
 
 

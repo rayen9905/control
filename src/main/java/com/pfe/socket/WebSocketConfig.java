@@ -24,6 +24,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         RequestUpgradeStrategy upgradeStrategy = new TomcatRequestUpgradeStrategy();
         registry.addEndpoint("/websocket")
                 .withSockJS();
+        registry.addEndpoint("/websocket-client-1")
+                .withSockJS();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.pfe.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pfe.entities.Historique;
@@ -57,6 +58,17 @@ public class HistoriqueService {
 	public List<Historique> getAllhis() {
 		return hisr.findAll();
 	}
+
+	public Historique gethisbyprt(Long p) {
+		List<Historique>lh=hisr.findAll();
+		List<Historique>lhh=new ArrayList<>();
+			for (int i =0; i <= lh.size(); i++) {
+				if (lh.get(i).getPrt().getIdPorte() == p) {
+					lhh.add(lh.get(i));				}
+			}
+			return lhh.get(lhh.size());
+	}
+
 	public Historique getbyid(Long a) {
 		return hisr.getById(a);
 	}
