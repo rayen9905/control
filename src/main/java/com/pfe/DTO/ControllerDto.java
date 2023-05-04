@@ -31,5 +31,4 @@ public class ControllerDto {
                 .dept(dtt)
                 .build();
     }
-    //aaa 3asba 3le sormek
 }

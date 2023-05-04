@@ -24,30 +24,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/Profile")
 public class ProfileService {
-	@Autowired(required=true)
+	@Autowired(required = true)
 	ProfileRepository prfr;
 
 	private Profile p;
-ProfileDto dt;
-	@PostMapping(value="/add")
+	ProfileDto dt;
+
+	@PostMapping(value = "/add")
 	@PreAuthorize(value = "hasAuthority('ADMIN')")
 	public void addprofile(@RequestBody Profile prf) {
-		Profile pr=new Profile();
+		Profile pr = new Profile();
 		pr.setNomProfile(prf.getNomProfile());
 		prfr.save(pr);
 	}
+
 	public Profile updateprofile(@RequestBody Profile p) {
 		return prfr.save(p);
 	}
 
-	@PutMapping(value="/update/{id}")
+	@PutMapping(value = "/update/{id}")
 	public ResponseEntity<Void> updateProfile(@PathVariable Long id, @RequestBody Profile prf) {
-	    prf.setIdProf(id);
-	    updateprofile(prf);
-	    return ResponseEntity.ok().build();
-	  }
+		prf.setIdProf(id);
+		updateprofile(prf);
+		return ResponseEntity.ok().build();
+	}
 
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping(value = "/delete/{id}")
 	public void deleteProfileById(@PathVariable Long id) {
 		prfr.deleteById(id);
 	}
@@ -58,16 +60,10 @@ ProfileDto dt;
 
 	}*/
 
-	@GetMapping(value="all")
-	public List<ProfileDto> getAllprfs() {
-		List<Profile> u= new ArrayList<>();
-		List<ProfileDto> udt= new ArrayList<>();
-		u=prfr.findAll();
-		for(Profile t : u){
-			udt.add(dt.toDto((t)));
-		}
-		return udt;
+	@GetMapping(value = "all")
+	public List<Profile> getAllprfs() {
+		return prfr.findAll();
 	}
-	}
+}
 
 

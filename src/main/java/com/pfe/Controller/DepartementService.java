@@ -6,6 +6,7 @@ import java.util.List;
 import com.pfe.DTO.DepartementDto;
 import com.pfe.DTO.UserDto;
 import com.pfe.entities.Departement;
+import com.pfe.entities.Porte;
 import com.pfe.entities.User;
 import com.pfe.repos.DepartementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ DepartementDto dt;
 
 	}*/
 
-	@GetMapping(value="all")
+	/*@GetMapping(value="all")
 	public List<DepartementDto> getAlldeps() {
 		List<Departement> u= new ArrayList<>();
 		List<DepartementDto> udt= new ArrayList<>();
@@ -68,5 +69,15 @@ DepartementDto dt;
 			udt.add(dt.toDto((t)));
 		}
 		return udt;
+	}*/
+	@GetMapping(value="all")
+	public List<Departement> getAlldeps() {
+		return depr.findAll();
+	}
+	@GetMapping(value="/getByDep/{id}")
+	public List<Porte> getBydeps(@PathVariable Long id) {
+		Departement d =depr.getById(id);
+	  List<Porte>p=d.getPorte();
+	  return p;
 	}
 }

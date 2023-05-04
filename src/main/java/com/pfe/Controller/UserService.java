@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pfe.DTO.UserDto;
+import com.pfe.entities.Porte;
 import com.pfe.entities.User;
+import com.pfe.repos.PorteRepository;
 import com.pfe.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,8 @@ public class UserService {
 
 @Autowired(required=true)
 UserRepository usrr;
+	@Autowired(required=true)
+	PorteRepository prtr;
 	UserDto dt;
 private User usr;
 
@@ -28,11 +32,19 @@ private User usr;
 private PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
 }
-@PostMapping(value="/add") 
-public ResponseEntity<User> adduser(@RequestBody User user) {
+@PostMapping(value="/add/{prt}")
+public ResponseEntity<User> adduser(@RequestBody User user,@PathVariable List<Long> prt) {
 	//Users user=new Users("rayen",passwordEncoder().encode("1234"));
-	 user.setPassword(passwordEncoder().encode(user.getPassword()));
-	 usrr.save(user);
+	user.setPassword(passwordEncoder().encode(user.getPassword()));
+	User u=usrr.save(user);
+	for (Long i:prt
+		 ) {
+		Porte p = prtr.getById(i);
+		List<User> pr1 = p.getUsr();
+		pr1.add(u);
+		p.setUsr(pr1);
+		prtr.save(p);
+	}
 	 return ResponseEntity.ok(user);
 }
 public User updateuser(@RequestBody User u) {
