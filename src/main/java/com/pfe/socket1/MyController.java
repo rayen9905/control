@@ -24,19 +24,19 @@ import java.util.concurrent.CountDownLatch;
 @RestController
 public class MyController {
     @Autowired(required=true)
-  HistoriqueService hs;
+    private HistoriqueService hs;
     @Autowired(required=true)
-    HistoriqueRepository hss;
+    private HistoriqueRepository hss;
     @Autowired(required=true)
-    UserService us;
+    private UserService us;
     @Autowired(required=true)
-    PorteService ps;
+    private PorteService ps;
     @Autowired(required=true)
-    EventService es;
+    private EventService es;
     @Autowired(required=true)
-    WaveService ws;
+    private WaveService ws;
     @Autowired(required=true)
-    WaveRepository wss;
+    private WaveRepository wss;
    /* @Autowired
     public MyController(HistoriqueService h,UserService u,PorteService p) {
         this.hs=h;
@@ -59,8 +59,8 @@ public class MyController {
 
 
                 // client1.sendMessage("Hello, server!");
-boolean verif=true;
-                while (verif) {
+//boolean verif=true;
+                while (true) {
                     client = socket.accept();
                     rep="";
                     System.out.println("new client connected");
@@ -96,9 +96,12 @@ boolean verif=true;
                                 String jsonString = objectMapper.writeValueAsString(jsonObject);
                                 client1.sendMessage(jsonString);
 
-
-                            } else if (rep.contains("120085f")||(rep.contains("120085f")&&rep.contains("120089")||rep.contains("1200861"))) {
+//||(rep.contains("120085f")&&rep.contains("120089"))
+                            } else if ((rep.contains("120085f"))||(rep=="9ca525b998e425b998e4aa01e120085fb0050013ba9ca525b998e4aa01e120089400500135daa0")) {
                                // rep.replace( 5 ,6 ,"yg");
+                                //rep=rep.substring(0,46);
+                               // rep=rep.replaceAll("120089","0000");
+                                //System.out.println(rep);
                                 String mac = rep.substring(0,12);
                                 System.out.println(mac);
                                 Porte pr = ps.getbyadr(mac);

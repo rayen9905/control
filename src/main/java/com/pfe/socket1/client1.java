@@ -15,7 +15,7 @@ public class client1 {
 
     public client1() throws URISyntaxException, IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        URI uri = new URI("ws://localhost:8080/websocket/client1");
+        URI uri = new URI("ws://localhost:8080/ControlAccess/websocket/client1");
         container.connectToServer(this, uri);
     }
 

@@ -1,6 +1,7 @@
 package com.pfe.Controller;
 
 import com.pfe.DTO.ProfileDto;
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Profile;
 import com.pfe.entities.WaveShare;
 import com.pfe.repos.ProfileRepository;
@@ -52,6 +53,14 @@ public WaveShare getwbyid(String mac){
     public void deleteProfileById(@PathVariable String id)
     {
         waver.deleteById(id);
+    }
+    @GetMapping(value="get-one")
+    public WaveShare getone(String id){
+        return waver.getById(id);
+    }
+   @GetMapping(value="all")
+    public List<WaveShare> getAllprfs(){
+        return waver.findAll();
     }
 	/*
 	@RequestMapping(value="/deleteuser", method=RequestMethod.POST)

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.pfe.DTO.LecteurDto;
 import com.pfe.DTO.UserDto;
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Lecteur;
 import com.pfe.entities.User;
 import com.pfe.repos.LecteurRepository;
@@ -22,41 +23,47 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/Lecteur")
 public class LecteurService {
-	@Autowired(required=true)
+	@Autowired(required = true)
 	LecteurRepository lecr;
-LecteurDto dt;
+	LecteurDto dt;
 	private Lecteur l;
 
-	@PostMapping(value="/add")
+	@PostMapping(value = "/add")
 	public void addlecteur(@RequestBody Lecteur lec) {
 		lecr.save(lec);
 	}
+
 	public Lecteur updatelecteur(@RequestBody Lecteur lec) {
 		return lecr.save(lec);
 	}
 
-	@PutMapping(value="/update/{id}")
+	@PutMapping(value = "/update/{id}")
 	public ResponseEntity<Void> updateLecteur(@PathVariable Long id, @RequestBody Lecteur lec) {
-	    lec.setIdLecteur(id);
-	    updatelecteur(lec);
-	    return ResponseEntity.ok().build();
-	  }
+		lec.setIdLecteur(id);
+		updatelecteur(lec);
+		return ResponseEntity.ok().build();
+	}
 
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping(value = "/delete/{id}")
 	public void deleteLecteurById(@PathVariable Long id) {
 		lecr.deleteById(id);
 	}
+
 	/*
 	@RequestMapping(value="/deleteuser", method=RequestMethod.POST)
 	public produit getProduit(Long id) {
 		return produitRepository.findById(id).get();
 
 	}*/
-	@GetMapping(value="alll")
+	@GetMapping(value = "all")
 	public List<Lecteur> getAlllecss() {
 		return lecr.findAll();
 	}
-	@GetMapping(value="all")
+	@GetMapping(value="get-one")
+	public Lecteur getone(Long id){
+		return lecr.getById(id);
+	}
+	/*@GetMapping(value="all")
 	public List<LecteurDto> getAlllecs() {
 
 		List<Lecteur> u= new ArrayList<>();
@@ -66,6 +73,6 @@ LecteurDto dt;
 			udt.add(dt.toDto((t)));
 		}
 		return udt;
-	}
-
+	}*/
 }
+

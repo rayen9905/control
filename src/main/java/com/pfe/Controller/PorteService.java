@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pfe.DTO.PorteDto;
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Lecteur;
 import com.pfe.entities.Porte;
 import com.pfe.entities.User;
@@ -70,7 +71,7 @@ static PorteDto dt;
 		pt.setIdPorte(p.get().getIdPorte());
 		return pt;
 	}
-	@GetMapping(value="/all")
+	/*@GetMapping(value="/all")
 	public List<PorteDto> getAllPrt() {
 
 		List<Porte> u= new ArrayList<>();
@@ -80,12 +81,16 @@ static PorteDto dt;
 			udt.add(dt.toDto((t)));
 		}
 		return udt;
-	}
+	}*/
 	public Optional<Porte> getbyid() {
 		return prtr.findById(1L);
 	}
 	@GetMapping(value="/get-all")
 	public List<Porte> getbyidd() {
 		return prtr.findAll();
+	}
+	@GetMapping(value="get-one")
+	public Porte getone(Long id){
+		return prtr.getById(id);
 	}
 }

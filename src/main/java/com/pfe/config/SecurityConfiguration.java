@@ -37,7 +37,7 @@ public class SecurityConfiguration {
         .disable()
             .cors().and()
         .authorizeRequests()
-        .requestMatchers("/api/v1/auth/**","/websocket/**")
+        .requestMatchers("/api/v1/auth/**","/websocket/**","/Controller/des/**")
           .permitAll()
         .anyRequest()
           .authenticated()

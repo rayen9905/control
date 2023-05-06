@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.pfe.DTO.ProfileDto;
 import com.pfe.DTO.UserDto;
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Profile;
 import com.pfe.entities.User;
 import com.pfe.repos.ProfileRepository;
@@ -63,6 +64,10 @@ public class ProfileService {
 	@GetMapping(value = "all")
 	public List<Profile> getAllprfs() {
 		return prfr.findAll();
+	}
+	@GetMapping(value="get-one")
+	public Profile getone(Long id){
+		return prfr.getById(id);
 	}
 }
 

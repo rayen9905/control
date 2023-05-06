@@ -1,5 +1,6 @@
 package com.pfe.Controller;
 
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Event;
 import com.pfe.entities.WaveShare;
 import com.pfe.repos.EventRepository;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/Event")
@@ -23,6 +26,14 @@ public class EventService {
         evnt.setEtEvent(ev.getEtEvent());
         evnt.setDateEvent(ev.getDateEvent());
         return evtr.save(evnt);
+    }
+    @GetMapping(value="all")
+    public List<Event> getallevent(){
+        return evtr.findAll();
+    }
+    @GetMapping(value="get-one")
+    public Event getone(Long id){
+        return evtr.getById(id);
     }
    /* public WaveShare updatewave(@RequestBody WaveShare wa) {
         return waver.save(wa);

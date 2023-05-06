@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.pfe.DTO.DepartementDto;
 import com.pfe.DTO.UserDto;
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Departement;
 import com.pfe.entities.Porte;
 import com.pfe.entities.User;
@@ -79,5 +80,9 @@ DepartementDto dt;
 		Departement d =depr.getById(id);
 	  List<Porte>p=d.getPorte();
 	  return p;
+	}
+	@GetMapping(value="get-one")
+	public Departement getone(Long id){
+		return depr.getById(id);
 	}
 }

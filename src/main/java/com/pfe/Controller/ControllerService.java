@@ -15,6 +15,7 @@ import com.pfe.repos.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,7 +71,7 @@ ControllerDto dt;
 
 		}*/
 
-		@GetMapping(value="all")
+		/*@GetMapping(value="all")
 		public List<ControllerDto> getAllcnts() {
 			List<Controlleur> u= new ArrayList<>();
 			List<ControllerDto> udt= new ArrayList<>();
@@ -79,10 +80,18 @@ ControllerDto dt;
 				udt.add(dt.toDto((t)));
 			}
 			return udt;
-		}
+		}*/
+	@GetMapping(value="all")
+	public List<Controlleur> getAllcnts() {
+			return cntrlr.findAll();
+	}
 	@GetMapping(value="test")
 	public Controlleur getcnttt() {
 		return cntrlr.getById(5L);
+	}
+	@GetMapping(value="get-one")
+	public Controlleur getone(Long id){
+		return cntrlr.getById(id);
 	}
 	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
 	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable Long dr,@PathVariable String uid){
@@ -103,14 +112,15 @@ ControllerDto dt;
 			h.setEtatHistorique("accès refusé");
 			h.setCause("erreur du controlleur");
 			hisr.save(h);
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("te3ba la3bed");
 
 		}
 		try{
-			 if (uid.length()==14) {
-				uidd=uid.substring(0,10);
+			 if (uid.length()==10) {
+				uidd=uid.substring(0,6);
 				System.out.println("97 "+uidd);
-				ps=uid.substring(10,14);
+				ps=uid.substring(6,10);
 				System.out.println("99 "+ps);
 				u1 = usrr.findByuid(uidd);
 				 if(!u1.getCodePin().equals(ps)){
@@ -123,7 +133,8 @@ ControllerDto dt;
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
-					 return ResponseEntity.notFound().build();
+					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							 .body("te3ba la3bed");
 
 				 }
 			 }
@@ -136,12 +147,13 @@ ControllerDto dt;
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					return ResponseEntity.notFound().build();
+					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							.body("te3ba la3bed");
 
 				}
 
 		try{
-		if (uid.length()==10) {
+		if (uid.length()==6) {
 				u1 = usrr.findByuid(uid);
 				 if (u1.getCodePin()!=null) {
 					//return "ghalta f pin2";
@@ -151,7 +163,8 @@ ControllerDto dt;
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
-					 return ResponseEntity.notFound().build();
+					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							 .body("te3ba la3bed");
 				 }
 		}
 		}
@@ -163,7 +176,8 @@ ControllerDto dt;
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					return ResponseEntity.notFound().build();
+					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							.body("te3ba la3bed");
 				}
 				Porte p = prtr.getById(dr);
 				List<Porte> pd = u1.getPrt();
@@ -181,7 +195,8 @@ ControllerDto dt;
 					h.setCause("Porte Non Autorisé");
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					return ResponseEntity.notFound().build();
+					return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							.body("te3ba la3bed");
 
 				}
 		//Porte p = prtr.getById(dr);
@@ -191,12 +206,13 @@ ControllerDto dt;
 		h.setEtatHistorique("access accepté");
 		hisr.save(h);
 		//return "haw s7ii7 mara7be";
-		return ResponseEntity.ok().build();
+		return ResponseEntity.status(HttpStatus.OK)
+				.body("zaretna el barka");
 
 
 	}
 	///////// sawer el materiellllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 	// amélioration de pris de décision
-//liason entrehistorique et event
+//liason entre historique et event
 	// architecture d'envoi en des alarms et events en websocket
 }

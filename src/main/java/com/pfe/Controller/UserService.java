@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pfe.DTO.UserDto;
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Porte;
 import com.pfe.entities.User;
 import com.pfe.repos.PorteRepository;
@@ -32,7 +33,7 @@ private User usr;
 private PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
 }
-@PostMapping(value="/add/{prt}")
+/*@PostMapping(value="/add/{prt}")
 public ResponseEntity<User> adduser(@RequestBody User user,@PathVariable List<Long> prt) {
 	//Users user=new Users("rayen",passwordEncoder().encode("1234"));
 	user.setPassword(passwordEncoder().encode(user.getPassword()));
@@ -46,7 +47,23 @@ public ResponseEntity<User> adduser(@RequestBody User user,@PathVariable List<Lo
 		prtr.save(p);
 	}
 	 return ResponseEntity.ok(user);
-}
+}*/
+	@PostMapping(value="/add")
+	public int adduser(@RequestBody User user) {
+		//Users user=new Users("rayen",passwordEncoder().encode("1234"));
+		user.setPassword(passwordEncoder().encode(user.getPassword()));
+		User u=usrr.save(user);
+	return u.getId();
+	}
+	@PostMapping(value="/addd/{i}/{u}")
+	public void adduserprt(@PathVariable Long i,@PathVariable int u) {
+	    User uu = usrr.getById(u);
+	    Porte p = prtr.getById(i);
+		List<User> pr1 = p.getUsr();
+		pr1.add(uu);
+		p.setUsr(pr1);
+		prtr.save(p);
+	}
 public User updateuser(@RequestBody User u) {
 	return usrr.save(u);
 }
@@ -79,7 +96,7 @@ public UserDetails loadUserByUsername(@PathVariable String idd)throws UsernameNo
   }
 
   return user;*/
-	@GetMapping(value="/all")
+	/*@GetMapping(value="/all")
 public List<UserDto> getAllUsers() {
 		List<User> u= new ArrayList<>();
 		List<UserDto> udt= new ArrayList<>();
@@ -88,14 +105,18 @@ public List<UserDto> getAllUsers() {
 			udt.add(dt.toDto((t)));
 		}
 		return udt;
-}
+}*/
 	@GetMapping(value="/allu")
 	public User getAllUsersss() {
 	return usrr.findByuid("1234567899");
 	}
-	@GetMapping(value="/alll")
+	@GetMapping(value="/all")
 	public List<User> getAllUserss() {
 		return usrr.findAll();
+	}
+	@GetMapping(value="get-one")
+	public User getone(int id){
+		return usrr.getById(id);
 	}
 	public Optional<User> getbyid() {
 		return usrr.findById(52);

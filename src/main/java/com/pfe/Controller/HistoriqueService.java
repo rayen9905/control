@@ -3,10 +3,12 @@ package com.pfe.Controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pfe.entities.Controlleur;
 import com.pfe.entities.Historique;
 import com.pfe.repos.HistoriqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/Historique")
+@Service
 public class HistoriqueService {
-	@Autowired(required=true)
-	HistoriqueRepository hisr;
+	@Autowired
+	private HistoriqueRepository hisr;
 
 	private Historique his;
 
@@ -57,6 +60,10 @@ public class HistoriqueService {
 	@GetMapping(value="all")
 	public List<Historique> getAllhis() {
 		return hisr.findAll();
+	}
+	@GetMapping(value="get-one")
+	public Historique getone(Long id){
+		return hisr.getById(id);
 	}
 	@GetMapping(value="/one/{p}")
 	public Historique gethisbyprt1(@PathVariable Long p) {
