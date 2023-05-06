@@ -51,4 +51,8 @@ public class EventService {
     {
         waver.deleteById(id);
     }*/
+    @GetMapping(value = "count")
+    public int countevent(String ev){
+        return evtr.countevent(ev);
+    }
 }

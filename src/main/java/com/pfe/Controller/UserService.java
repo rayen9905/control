@@ -61,6 +61,7 @@ public ResponseEntity<User> adduser(@RequestBody User user,@PathVariable List<Lo
 	    Porte p = prtr.getById(i);
 		List<User> pr1 = p.getUsr();
 		pr1.add(uu);
+
 		p.setUsr(pr1);
 		prtr.save(p);
 	}
