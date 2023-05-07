@@ -63,8 +63,8 @@ public class HistoriqueService {
 	public List<Historique> getAllhis() {
 		return hisr.findAll();
 	}
-	@GetMapping(value="get-one")
-	public Historique getone(Long id){
+	@GetMapping(value="/get-one/{id}")
+	public Historique getone(@PathVariable Long id){
 		return hisr.getById(id);
 	}
 	@GetMapping(value="/one/{p}")

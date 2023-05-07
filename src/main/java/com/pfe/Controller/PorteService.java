@@ -89,8 +89,8 @@ static PorteDto dt;
 	public List<Porte> getbyidd() {
 		return prtr.findAll();
 	}
-	@GetMapping(value="get-one")
-	public Porte getone(Long id){
+	@GetMapping(value="/get-one/{id}")
+	public Porte getone(@PathVariable Long id){
 		return prtr.getById(id);
 	}
 }

@@ -59,8 +59,8 @@ public class LecteurService {
 	public List<Lecteur> getAlllecss() {
 		return lecr.findAll();
 	}
-	@GetMapping(value="get-one")
-	public Lecteur getone(Long id){
+	@GetMapping(value="/get-one/{id}")
+	public Lecteur getone(@PathVariable Long id){
 		return lecr.getById(id);
 	}
 	/*@GetMapping(value="all")

@@ -38,8 +38,8 @@ public class EventService {
     public List<Event> getallevent(){
         return evtr.findAll();
     }
-    @GetMapping(value="get-one")
-    public Event getone(Long id){
+    @GetMapping(value="/get-one/{id}")
+    public Event getone(@PathVariable Long id){
         return evtr.getById(id);
     }
    /* public WaveShare updatewave(@RequestBody WaveShare wa) {

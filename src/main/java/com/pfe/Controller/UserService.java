@@ -115,8 +115,8 @@ public List<UserDto> getAllUsers() {
 	public List<User> getAllUserss() {
 		return usrr.findAll();
 	}
-	@GetMapping(value="get-one")
-	public User getone(int id){
+	@GetMapping(value="/get-one/{id}")
+	public User getone(@PathVariable int id){
 		return usrr.getById(id);
 	}
 	public Optional<User> getbyid() {

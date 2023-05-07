@@ -65,8 +65,8 @@ public class ProfileService {
 	public List<Profile> getAllprfs() {
 		return prfr.findAll();
 	}
-	@GetMapping(value="get-one")
-	public Profile getone(Long id){
+	@GetMapping(value="/get-one/{id}")
+	public Profile getone(@PathVariable Long id){
 		return prfr.getById(id);
 	}
 }
