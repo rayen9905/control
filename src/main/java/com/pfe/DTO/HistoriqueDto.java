@@ -3,11 +3,9 @@ package com.pfe.DTO;
 import com.pfe.entities.*;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,20 +13,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class HistoriqueDto {
-    private Long IdHis;
-    private PorteDto prt;
-    private UserDto usr;
+    private LocalDate date;
+    private int acc;
+    private int den;
 
-    static PorteDto dt;
-    static  UserDto dtt;
-    public static HistoriqueDto toDto(Historique h) {
-        PorteDto pd = dt.toDto(h.getPrt());
-        UserDto us = dtt.toDto(h.getUsr());
-        return HistoriqueDto.builder()
-                .IdHis(h.getIdHis())
-                .prt(pd)
-                .usr(us)
-                .build();
-    }
 }

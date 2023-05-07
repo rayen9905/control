@@ -41,7 +41,7 @@ public class EventDto {
         return EventDto.builder()
                 .IdEvent(e.getIdEvent())
                 .EtEvent(e.getEtEvent())
-                .DateEvent(e.getDateEvent())
+                //.DateEvent(e.getDateEvent())
                 .waves(ev)
                 .build();
     }

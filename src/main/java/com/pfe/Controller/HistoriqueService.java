@@ -1,8 +1,10 @@
 package com.pfe.Controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.pfe.DTO.HistoriqueDto;
 import com.pfe.entities.Controlleur;
 import com.pfe.entities.Historique;
 import com.pfe.repos.HistoriqueRepository;
@@ -101,6 +103,24 @@ public class HistoriqueService {
 
 	public Historique getbyid(Long a) {
 		return hisr.getById(a);
+	}
+	@GetMapping(value="/counthis")
+	public List<HistoriqueDto> counthis(){
+		List<HistoriqueDto>hd=new ArrayList<>();
+		HistoriqueDto hdd=new HistoriqueDto();
+		LocalDate today = LocalDate.now();
+        hdd.setDate(today);
+		hdd.setAcc(	hisr.counthis("access accepté",today));
+        hdd.setAcc(	hisr.counthis("accès refusé",today));
+        hd.add(hdd);
+		for (int i = 0; i < 6; i++) {
+			LocalDate date = today.minusDays(i + 1);
+			hdd.setDate(date);
+			hdd.setAcc(	hisr.counthis("access accepté",date));
+			hdd.setAcc(	hisr.counthis("accès refusé",date));
+			hd.add(hdd);
+		}
+		return hd;
 	}
 }
 //controlleur/reader/

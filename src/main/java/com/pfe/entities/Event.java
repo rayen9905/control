@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +27,9 @@ public class Event {
     @Column(name = "Et_Event", length = 100)
     private Type_Evt EtEvent;
     @Column(name = "Date_Event", length = 100)
-    private Date DateEvent;
+    private LocalDate DateEvent;
+    @Column(name = "Time_Event", length = 100)
+    private LocalTime TimeEvent;
     @ManyToMany
     @JsonIgnoreProperties("events")
     private List<WaveShare> waves;

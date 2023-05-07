@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Data
@@ -33,5 +34,6 @@ private User usr;
 private Long IdEvent;
 private String cause;
 private String EtatHistorique;
+private LocalDate DateHistorique;
 
 }

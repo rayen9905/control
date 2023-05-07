@@ -54,8 +54,8 @@ public WaveShare getwbyid(String mac){
     {
         waver.deleteById(id);
     }
-    @GetMapping(value="get-one")
-    public WaveShare getone(String id){
+    @GetMapping(value="/get-one/{id}")
+    public WaveShare getone(@PathVariable String id){
         return waver.getById(id);
     }
    @GetMapping(value="all")

@@ -81,8 +81,8 @@ DepartementDto dt;
 	  List<Porte>p=d.getPorte();
 	  return p;
 	}
-	@GetMapping(value="get-one")
-	public Departement getone(Long id){
+	@GetMapping(value="/get-one/{id}")
+	public Departement getone(@PathVariable Long id){
 		return depr.getById(id);
 	}
 }
