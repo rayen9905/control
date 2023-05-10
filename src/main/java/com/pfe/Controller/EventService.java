@@ -69,7 +69,7 @@ public class EventService {
         String formattedDate = currentDate.format(formatter);
         return java.sql.Date.valueOf(formattedDate);*/
         //return datee=new Date("2023/05/03");
-        return evtr.countevent(ev,currentDate);
+        return evtr.countevent(ev,date);
     }
     @GetMapping(value = "/countt")
     public Date counteventt(){

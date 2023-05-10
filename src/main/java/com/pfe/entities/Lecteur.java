@@ -21,6 +21,8 @@ public class Lecteur {
 private Long IdLecteur;
 	@Column(name = "Ip_Adresse", length = 500)
 private String IpAdresse;
+	@Column(name = "Etat_Lecteur", length = 500)
+	private String EtatLecteur;
 
 @ManyToOne(fetch = FetchType.LAZY)
 @JoinColumn(name = "id_porte")

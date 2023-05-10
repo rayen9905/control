@@ -1,33 +1,20 @@
 package com.pfe.socket1;
 
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.pfe.entities.Event;
-import com.pfe.entities.Historique;
-import com.pfe.entities.Type_Evt;
 import jakarta.websocket.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-//@Component
+
 @ClientEndpoint
-public class WebSocketClient {
+public class client3 {
     private Session session;
 
-    public WebSocketClient() throws URISyntaxException, IOException, DeploymentException {
+    public client3() throws URISyntaxException, IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        URI uri = new URI("ws://localhost:8080/websocket");
+        URI uri = new URI("ws://localhost:8080/websocket/client3");
         container.connectToServer(this, uri);
     }
 
@@ -37,10 +24,8 @@ public class WebSocketClient {
     }
 
     public void sendMessage(String message) throws IOException, EncodeException {
-        // Send the JsonNode over the WebSocket
-        session.getBasicRemote().sendText(message);
 
-        //session.getBasicRemote().sendObject(jsonObject);
+        session.getBasicRemote().sendText(message);
     }
 
     @OnOpen
@@ -60,12 +45,12 @@ public class WebSocketClient {
     }
     public static void main(String[] args) throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
-        WebSocketClient client = new WebSocketClient();
+        client1 client = new client1();
         //client.connect("ws://localhost:8080/websocket"); // replace with your endpoint URL
-         while (true) {
-        client.sendMessage("hi server");
-        latch.await(3, TimeUnit.SECONDS);
-        //   client.session.close();
+        while (true) {
+            client.sendMessage("Hello, server!");
+            latch.await(3, TimeUnit.SECONDS);
+            //   client.session.close();
 
         }
     }

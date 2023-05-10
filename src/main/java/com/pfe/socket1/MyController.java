@@ -1,13 +1,17 @@
 package com.pfe.socket1;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pfe.Controller.*;
 import com.pfe.DTO.PorteDto;
 import com.pfe.entities.*;
 import com.pfe.repos.HistoriqueRepository;
 import com.pfe.repos.WaveRepository;
+import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
 import jakarta.xml.bind.DatatypeConverter;
+import org.json.JSONObject;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
@@ -39,276 +44,145 @@ public class MyController {
     private WaveService ws;
     @Autowired(required=true)
     private WaveRepository wss;
-   /* @Autowired
-    public MyController(HistoriqueService h,UserService u,PorteService p) {
-        this.hs=h;
-        this.us=u;
-        this.ps=p;
-    }*/
+    public void info(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException {
+        List<Event> ww = new ArrayList<>();
+        Event e= new Event();
+        String mac = rep.substring(0,12);
+        //System.out.println(mac);
+        Porte pr = ps.getbyadr(mac);
+        WaveShare w=ws.getwbyid(mac);
+        ww=w.getEvents();
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+        e.setDateEvent(date);
+        e.setTimeEvent(time);
+        e.setEtEvent(a);
+        Event e1=es.addevt(e);
+        ww.add(e1);
+        w.setEvents(ww);
+        wss.save(w);
+        Historique h=hs.gethisbyprt(pr.getIdPorte());
+        h.setIdEvent(e1.getIdEvent());
+        hss.save(h);
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("idporte", pr.getIdPorte());
+        jsonObject.put("etatevt", e1.getEtEvent());
+        jsonObject.put("dateevnt", e1.getDateEvent());
+        jsonObject.put("timeevnt", e1.getTimeEvent());
+        jsonObject.put("idevent",e1.getIdEvent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String jsonString = objectMapper.writeValueAsString(jsonObject);
+         client1.sendMessage(jsonString);
+    }
+    public void info1(String rep,client1 client1,Type_Evt a) throws IOException, EncodeException {
+        List<Event> ww = new ArrayList<>();
+        Event e= new Event();
+        String mac = rep.substring(0,12);
+        //System.out.println(mac);
+        Porte pr = ps.getbyadr(mac);
+        WaveShare w=ws.getwbyid(mac);
+        ww=w.getEvents();
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = time.format(formatter);
+        LocalTime localTime = LocalTime.parse(formattedTime, formatter);
+        System.out.println(localTime);
+        //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+        e.setDateEvent(date);
+        e.setTimeEvent(localTime);
+        e.setEtEvent(a);
+        Event e1=es.addevt(e);
+        ww.add(e1);
+        w.setEvents(ww);
+        wss.save(w);
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("idporte", pr.getIdPorte());
+        jsonObject.put("etatevt", e1.getEtEvent());
+        jsonObject.put("dateevnt", e1.getDateEvent());
+        jsonObject.put("timeevnt", e1.getTimeEvent());
+        jsonObject.put("idevent",e1.getIdEvent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String jsonString = objectMapper.writeValueAsString(jsonObject);
+        //return jsonString;
+        client1.sendMessage(jsonString);
+    }
+
 @PostMapping("/webs")
         public void main() throws Exception {
-            Socket client = null;
-            String rep;
-            try {
-                // Connect to the Waveshare device
-                //String rep = "9ca525b998e4";
-                ServerSocket socket = new ServerSocket(13001);
-                CountDownLatch latch = new CountDownLatch(1);
-                WebSocketClient client1 = new WebSocketClient();
-                client1 client2 = new client1();
-
-                //  System.out.println("aniii jayyy");
+    Socket client = null;
+    String rep;
+    try {
+        // Connect to the Waveshare device
+        //String rep = "9ca525b998e4";
+        ServerSocket socket = new ServerSocket(13001);
+        CountDownLatch latch = new CountDownLatch(1);
+        WebSocketClient client1 = new WebSocketClient();
+        client1 client2 = new client1();
 
 
-                // client1.sendMessage("Hello, server!");
-//boolean verif=true;
-                while (true) {
-                    client = socket.accept();
-                    rep="";
-                    System.out.println("new client connected");
-                    InputStream inputStream = client.getInputStream();
-                    //rep = client.getInetAddress().getHostAddress();
-                    while (true) {
-                        rep = rep + Integer.toHexString(inputStream.read());
+        while (true) {
+            client = socket.accept();
+           // client.getInetAddress().
+            rep = "";
+            System.out.println("new client connected");
+            InputStream inputStream = client.getInputStream();
+            //rep = client.getInetAddress().getHostAddress();
+            while (true) {
+                rep = rep + Integer.toHexString(inputStream.read());
 
-                       if (rep.length() > 77) {
-                            System.out.println(rep);
-                            if (rep.contains("1200860")) {
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
-                                LocalDate date = LocalDate.now();
-                                LocalTime time = LocalTime.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                                e.setTimeEvent(time);
-                                e.setEtEvent(Type_Evt.Intrusion_Alarm);
-                                Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Map<String, Object> jsonObject = new HashMap<>();
-                                jsonObject.put("idporte", pr.getIdPorte());
-                                jsonObject.put("etatevt", e1.getEtEvent());
-                                jsonObject.put("dateevnt", e1.getDateEvent());
-                                jsonObject.put("timeevnt", e1.getTimeEvent());
-                                jsonObject.put("idevent",e1.getIdEvent());
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(jsonObject);
-                                client1.sendMessage(jsonString);
+                if (rep.length() > 77) {
+                    System.out.println(rep);
+                    if (rep.contains("1200860")) {
+                        info1(rep, client2, Type_Evt.Intrusion_Alarm);
 
 //||(rep.contains("120085f")&&rep.contains("120089"))
-                            } else if ((rep.contains("120085f"))||(rep=="9ca525b998e425b998e4aa01e120085fb0050013ba9ca525b998e4aa01e120089400500135daa0")) {
-                               // rep.replace( 5 ,6 ,"yg");
-                                //rep=rep.substring(0,46);
-                               // rep=rep.replaceAll("120089","0000");
-                                //System.out.println(rep);
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
-                                LocalDate date = LocalDate.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                                e.setEtEvent(Type_Evt.Stayed_On);
-                                Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Map<String, Object> jsonObject = new HashMap<>();
-                                jsonObject.put("idporte", pr.getIdPorte());
-                                jsonObject.put("etatevt", e1.getEtEvent());
-                                jsonObject.put("dateevnt", e1.getDateEvent());
-                                jsonObject.put("idevent",e1.getIdEvent());
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(jsonObject);
-                                client1.sendMessage(jsonString);
-                                rep = "";
-
-                            } else if (rep.contains("1200862")) {
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
-                                LocalDate date = LocalDate.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                                e.setEtEvent(Type_Evt.Tailing_Alarm);
-                                Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Map<String, Object> jsonObject = new HashMap<>();
-                                jsonObject.put("idporte", pr.getIdPorte());
-                                jsonObject.put("etatevt", e1.getEtEvent());
-                                jsonObject.put("dateevnt", e1.getDateEvent());
-                                jsonObject.put("idevent",e1.getIdEvent());
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(jsonObject);
-                                client1.sendMessage(jsonString);
+                    } else if ((rep.contains("120085f")) || (rep == "9ca525b998e425b998e4aa01e120085fb0050013ba9ca525b998e4aa01e120089400500135daa0")) {
+                        info1(rep, client2, Type_Evt.Stayed_On);
 
 
-                            } else if (rep.contains("1200861")) {
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
-                                LocalDate date = LocalDate.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                                e.setEtEvent(Type_Evt.Reverse_Alarm);
-                                Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Map<String, Object> jsonObject = new HashMap<>();
-                                jsonObject.put("idporte", pr.getIdPorte());
-                                jsonObject.put("etatevt", e1.getEtEvent());
-                                jsonObject.put("dateevnt", e1.getDateEvent());
-                                jsonObject.put("idevent",e1.getIdEvent());
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(jsonObject);
-                                client1.sendMessage(jsonString);
+                    } else if (rep.contains("1200862")) {
+                        info1(rep, client2, Type_Evt.Tailing_Alarm);
 
-                            }
-                           else if (rep.contains("31012")) {
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
+                    } else if (rep.contains("1200861")) {
+                        info1(rep, client2, Type_Evt.Reverse_Alarm);
 
-                                LocalDate date = LocalDate.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                            e.setEtEvent(Type_Evt.Entry_Open);
-                               // ww.add(w);
-                            //e.setWaves(ww);
-                            Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Historique h=hs.gethisbyprt(pr.getIdPorte());
-                                h.setIdEvent(e1.getIdEvent());
-                                hss.save(h);
-                            Map<String, Object> jsonObject = new HashMap<>();
-                            jsonObject.put("idporte", pr.getIdPorte());
-                            jsonObject.put("etatevt", e1.getEtEvent());
-                            jsonObject.put("dateevnt", e1.getDateEvent());
-                            jsonObject.put("idevent",e1.getIdEvent());
-                            ObjectMapper objectMapper = new ObjectMapper();
-                            String jsonString = objectMapper.writeValueAsString(jsonObject);
-                        client1.sendMessage(jsonString);
-                            } else if ((rep.contains("120089"))) {
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
-                                LocalDate date = LocalDate.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                                e.setEtEvent(Type_Evt.Entry_Close);
-                                Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Map<String, Object> jsonObject = new HashMap<>();
-                                jsonObject.put("idporte", pr.getIdPorte());
-                                jsonObject.put("etatevt", e1.getEtEvent());
-                                jsonObject.put("dateevnt", e1.getDateEvent());
-                                jsonObject.put("idevent",e1.getIdEvent());
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(jsonObject);
-                                client1.sendMessage(jsonString);
+                    } else if (rep.contains("31012")) {
 
-                            } else if (rep.contains("31011")) {
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
-                                LocalDate date = LocalDate.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                                e.setEtEvent(Type_Evt.Exist_Open);
-                                Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Historique h=hs.gethisbyprt(pr.getIdPorte());
-                                h.setIdEvent(e1.getIdEvent());
-                                hss.save(h);
-                                Map<String, Object> jsonObject = new HashMap<>();
-                                jsonObject.put("idporte", pr.getIdPorte());
-                                jsonObject.put("etatevt", e1.getEtEvent());
-                                jsonObject.put("dateevnt", e1.getDateEvent());
-                                jsonObject.put("idevent",e1.getIdEvent());
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(jsonObject);
-                                client1.sendMessage(jsonString);
+                        info(rep, client1, Type_Evt.Entry_Open);
 
-                            } else if (rep.contains("120088")) {
-                                String mac = rep.substring(0,12);
-                                System.out.println(mac);
-                                Porte pr = ps.getbyadr(mac);
-                                List<Event> ww=new ArrayList<>();
-                                WaveShare w=ws.getwbyid(mac);
-                                ww=w.getEvents();
-                                LocalDate date = LocalDate.now();
-                                //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
-                                Event e= new Event();
-                                e.setDateEvent(date);
-                                e.setEtEvent(Type_Evt.Exist_Close);
-                                Event e1=es.addevt(e);
-                                ww.add(e1);
-                                w.setEvents(ww);
-                                wss.save(w);
-                                Map<String, Object> jsonObject = new HashMap<>();
-                                jsonObject.put("idporte", pr.getIdPorte());
-                                jsonObject.put("etatevt", e1.getEtEvent());
-                                jsonObject.put("dateevnt", e1.getDateEvent());
-                                jsonObject.put("idevent",e1.getIdEvent());
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                String jsonString = objectMapper.writeValueAsString(jsonObject);
-                                client1.sendMessage(jsonString);
-                            }
-                            // rep=client.getInetAddress().getHostAddress();
+                    } else if ((rep.contains("120089"))) {
 
-                            rep = "9ca525b998e4";
+                        info(rep, client1, Type_Evt.Entry_Close);
 
-                        }
-                        //rep="";
-                        //System.out.println(rep);
+
+                    } else if (rep.contains("31011")) {
+                        info(rep, client1, Type_Evt.Exist_Open);
+
+
+                    } else if (rep.contains("120088")) {
+                        info(rep, client1, Type_Evt.Entry_Close);
 
                     }
-                    //rep="";
-                    }
-                //}
+                    // rep=client.getInetAddress().getHostAddress();
+
+                    rep = rep.substring(0, 12);
+
+                }
+                //rep="";
+                //System.out.println(rep);
+
             }
-            catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Error connecting to Waveshare device");
-            }
+            //rep="";
         }
+        //}
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Error connecting to Waveshare device");
+    }
 
+}
     }

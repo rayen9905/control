@@ -37,6 +37,8 @@ private String NomCont;
 @Enumerated(EnumType.STRING)
 @Column(name = "Status", length = 50, nullable = false)
 private StatuCntrl Status;
+	@Column(name = "Ip_Adresse", length = 500)
+	private String IpAdresse;
 
 @ManyToOne
 @JsonIgnoreProperties("cntrls")

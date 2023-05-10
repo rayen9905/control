@@ -74,5 +74,17 @@ public class LecteurService {
 		}
 		return udt;
 	}*/
+	@GetMapping(value = "/connected/{id}")
+public void connected(@PathVariable Long id){
+		Lecteur l = lecr.getById(id);
+		l.setEtatLecteur("connected");
+		lecr.save(l);
+	}
+	@GetMapping(value = "/disconnected/{id}")
+	public void disconnected(@PathVariable Long id){
+		Lecteur l = lecr.getById(id);
+		l.setEtatLecteur("connected");
+		lecr.save(l);
+	}
 }
 

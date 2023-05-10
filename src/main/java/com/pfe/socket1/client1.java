@@ -1,6 +1,7 @@
 package com.pfe.socket1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.websocket.*;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class client1 {
 
     public client1() throws URISyntaxException, IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        URI uri = new URI("ws://localhost:8080/ControlAccess/websocket/client1");
+        URI uri = new URI("ws://localhost:8080/websocket/client1");
         container.connectToServer(this, uri);
     }
 
@@ -24,11 +25,9 @@ public class client1 {
         System.out.println("Received message: " + message);
     }
 
-    public void sendMessage(Object message) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(message);
-        session.getBasicRemote().sendText(json);
-        //session.getBasicRemote().sendText(message);
+    public void sendMessage(String message) throws IOException, EncodeException {
+
+        session.getBasicRemote().sendText(message);
     }
 
     @OnOpen

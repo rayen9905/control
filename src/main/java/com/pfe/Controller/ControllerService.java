@@ -1,9 +1,16 @@
 package com.pfe.Controller;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pfe.DTO.ControllerDto;
 import com.pfe.DTO.PorteDto;
 import com.pfe.DTO.ProfileDto;
@@ -13,7 +20,11 @@ import com.pfe.repos.ControllerRepository;
 import com.pfe.repos.HistoriqueRepository;
 import com.pfe.repos.PorteRepository;
 import com.pfe.repos.UserRepository;
+import com.pfe.socket1.client1;
+import com.pfe.socket1.client3;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.websocket.DeploymentException;
+import jakarta.websocket.EncodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -94,8 +105,21 @@ ControllerDto dt;
 	public Controlleur getone(@PathVariable Long id){
 		return cntrlr.getById(id);
 	}
+	public String send(Historique h) throws JsonProcessingException {
+		Map<String, Object> jsonObject = new HashMap<>();
+		jsonObject.put("idhistorique", h.getIdHis());
+		jsonObject.put("idporte", h.getPrt().getIdPorte());
+		jsonObject.put("iduser", h.getUsr().getId());
+		jsonObject.put("event", h.getIdEvent());
+		jsonObject.put("cause",h.getCause());
+		jsonObject.put("date",h.getDateHistorique());
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		String jsonString = objectMapper.writeValueAsString(jsonObject);
+		 return jsonString;
+	}
 	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
-	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable Long dr,@PathVariable String uid){
+	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable Long dr,@PathVariable String uid) throws IOException, EncodeException, DeploymentException, URISyntaxException {
 		boolean verif1 = false;
 		String uidd;
 		String ps;
@@ -115,6 +139,9 @@ ControllerDto dt;
 			h.setEtatHistorique("accès refusé");
 			h.setCause("erreur du controlleur");
 			hisr.save(h);
+			String info = send(h);
+			client3 client = new client3();
+			client.sendMessage(info);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("te3ba la3bed");
 
@@ -137,6 +164,9 @@ ControllerDto dt;
 					 h.setDateHistorique(LocalDate.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
+					 String info = send(h);
+					 client3 client = new client3();
+					 client.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							 .body("te3ba la3bed");
 
@@ -152,6 +182,9 @@ ControllerDto dt;
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
+					String info = send(h);
+					client3 client = new client3();
+					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 
@@ -169,6 +202,9 @@ ControllerDto dt;
 					 h.setDateHistorique(LocalDate.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
+					 String info = send(h);
+					 client3 client = new client3();
+					 client.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							 .body("te3ba la3bed");
 				 }
@@ -183,6 +219,9 @@ ControllerDto dt;
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
+					String info = send(h);
+					client3 client = new client3();
+					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 				}
@@ -203,6 +242,9 @@ ControllerDto dt;
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
+					String info = send(h);
+					client3 client = new client3();
+					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 
@@ -214,6 +256,9 @@ ControllerDto dt;
 		h.setDateHistorique(LocalDate.now());
 		h.setEtatHistorique("access accepté");
 		hisr.save(h);
+		String info = send(h);
+		client3 client = new client3();
+		client.sendMessage(info);
 		//return "haw s7ii7 mara7be";
 		return ResponseEntity.status(HttpStatus.OK)
 				.body("zaretna el barka");
