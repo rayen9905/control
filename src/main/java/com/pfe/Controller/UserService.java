@@ -72,7 +72,8 @@ public User updateuser(@RequestBody User u) {
 @PutMapping(value="/update/{id}")
 public ResponseEntity<Void> updateUser(@PathVariable int id, @RequestBody User user) {
     user.setId(id);
-    updateuser(user);
+	user.setPassword(passwordEncoder().encode(user.getPassword()));
+	updateuser(user);
     return ResponseEntity.ok().build();
   }
 

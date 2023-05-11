@@ -3,10 +3,7 @@ package com.pfe.Controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +17,7 @@ import com.pfe.repos.ControllerRepository;
 import com.pfe.repos.HistoriqueRepository;
 import com.pfe.repos.PorteRepository;
 import com.pfe.repos.UserRepository;
+import com.pfe.socket1.IPMonitor;
 import com.pfe.socket1.client1;
 import com.pfe.socket1.client3;
 import jakarta.persistence.EntityNotFoundException;
@@ -57,6 +55,12 @@ public class ControllerService {
 		private Controlleur cnt;
 		private boolean verif;
 ControllerDto dt;
+	/*@Autowired(required=true)
+	private final IPMonitor ipMonitor;
+
+	public ControllerService(IPMonitor ipMonitor) {
+		this.ipMonitor = ipMonitor;
+	}*/
 		@PostMapping(value="/add")
 		public void addcnt(@RequestBody Controlleur cnt) {
 			cntrlr.save(cnt);
@@ -264,6 +268,10 @@ ControllerDto dt;
 				.body("zaretna el barka");
 
 
+	}
+	@GetMapping("/connected")
+	public Set<String> getConnectedIPAddresses(IPMonitor ipMonitor) {
+		return ipMonitor.getConnectedIPAddresses();
 	}
 	///////// sawer el materiellllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 	// amélioration de pris de décision
