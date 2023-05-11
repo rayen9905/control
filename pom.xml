@@ -132,7 +132,24 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.14.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jnetpcap</groupId>
+			<artifactId>jnetpcap</artifactId>
+			<version>1.4.r1425-1</version>
+		</dependency>
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>jnetpcap-repo</id>
+			<url>https://github.com/luigimontanez/jnetpcap/raw/master/release/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<build>
 		<finalName>ControlAccess</finalName>
 		<plugins>
