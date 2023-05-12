@@ -46,7 +46,7 @@ public class WebSocketClient {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        System.out.println("Connected to server");
+        System.out.println("Connected to server websocket");
     }
 
     @OnClose

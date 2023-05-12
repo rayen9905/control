@@ -1,5 +1,6 @@
 package com.pfe.control;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -21,9 +22,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @EnableWebSocket
 public class ControlAccessApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
-
 		SpringApplication.run(ControlAccessApplication.class, args);
-
 	}
 	@Bean
 	public ServerEndpointExporter serverEndpointExporter() {

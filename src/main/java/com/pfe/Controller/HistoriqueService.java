@@ -111,14 +111,16 @@ public class HistoriqueService {
 		LocalDate today = LocalDate.now();
         hdd.setDate(today);
 		hdd.setAcc(	hisr.counthis("access accepté",today));
-        hdd.setAcc(	hisr.counthis("accès refusé",today));
-        hd.add(hdd);
+        hdd.setDen(	hisr.counthis("accès refusé",today));
+		hd.add(hdd);
 		for (int i = 0; i < 6; i++) {
+			HistoriqueDto h= new HistoriqueDto();
 			LocalDate date = today.minusDays(i + 1);
-			hdd.setDate(date);
-			hdd.setAcc(	hisr.counthis("access accepté",date));
-			hdd.setAcc(	hisr.counthis("accès refusé",date));
-			hd.add(hdd);
+			System.out.println(date);
+			h.setDate(date);
+			h.setAcc(	hisr.counthis("access accepté",date));
+			h.setDen(	hisr.counthis("accès refusé",date));
+			hd.add(h);
 		}
 		return hd;
 	}

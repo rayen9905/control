@@ -78,7 +78,6 @@ public class MyController {
     }
     public void info1(String rep,client1 client1,Type_Evt a) throws IOException, EncodeException {
         List<Event> ww = new ArrayList<>();
-        Event e= new Event();
         String mac = rep.substring(0,12);
         //System.out.println(mac);
         Porte pr = ps.getbyadr(mac);
@@ -88,11 +87,12 @@ public class MyController {
         LocalTime time = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = time.format(formatter);
-        LocalTime localTime = LocalTime.parse(formattedTime, formatter);
-        System.out.println(localTime);
+        LocalTime localTimee = LocalTime.parse(formattedTime, formatter);
+        System.out.println(localTimee);
+        Event e= new Event();
         //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
         e.setDateEvent(date);
-        e.setTimeEvent(localTime);
+        e.setTimeEvent(localTimee);
         e.setEtEvent(a);
         Event e1=es.addevt(e);
         ww.add(e1);
@@ -164,7 +164,7 @@ public class MyController {
 
 
                     } else if (rep.contains("120088")) {
-                        info(rep, client1, Type_Evt.Entry_Close);
+                        info(rep, client1, Type_Evt.Exist_Close);
 
                     }
                     // rep=client.getInetAddress().getHostAddress();

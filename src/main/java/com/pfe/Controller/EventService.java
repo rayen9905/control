@@ -31,6 +31,7 @@ public class EventService {
     public Event addevt(@RequestBody Event ev) {
         Event evnt=new Event();
         evnt.setEtEvent(ev.getEtEvent());
+        evnt.setTimeEvent(ev.getTimeEvent());
         evnt.setDateEvent(ev.getDateEvent());
         return evtr.save(evnt);
     }

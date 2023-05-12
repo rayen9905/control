@@ -3,7 +3,10 @@ package com.pfe.Controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +20,6 @@ import com.pfe.repos.ControllerRepository;
 import com.pfe.repos.HistoriqueRepository;
 import com.pfe.repos.PorteRepository;
 import com.pfe.repos.UserRepository;
-import com.pfe.socket1.IPMonitor;
 import com.pfe.socket1.client1;
 import com.pfe.socket1.client3;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,12 +57,6 @@ public class ControllerService {
 		private Controlleur cnt;
 		private boolean verif;
 ControllerDto dt;
-	/*@Autowired(required=true)
-	private final IPMonitor ipMonitor;
-
-	public ControllerService(IPMonitor ipMonitor) {
-		this.ipMonitor = ipMonitor;
-	}*/
 		@PostMapping(value="/add")
 		public void addcnt(@RequestBody Controlleur cnt) {
 			cntrlr.save(cnt);
@@ -109,14 +105,9 @@ ControllerDto dt;
 	public Controlleur getone(@PathVariable Long id){
 		return cntrlr.getById(id);
 	}
-	public String send(Historique h) throws JsonProcessingException {
+	public String send(Historique h,String res) throws JsonProcessingException {
 		Map<String, Object> jsonObject = new HashMap<>();
-		jsonObject.put("idhistorique", h.getIdHis());
-		jsonObject.put("idporte", h.getPrt().getIdPorte());
-		jsonObject.put("iduser", h.getUsr().getId());
-		jsonObject.put("event", h.getIdEvent());
-		jsonObject.put("cause",h.getCause());
-		jsonObject.put("date",h.getDateHistorique());
+		jsonObject.put("result",res);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 		String jsonString = objectMapper.writeValueAsString(jsonObject);
@@ -143,7 +134,7 @@ ControllerDto dt;
 			h.setEtatHistorique("accès refusé");
 			h.setCause("erreur du controlleur");
 			hisr.save(h);
-			String info = send(h);
+			String info = send(h,"false");
 			client3 client = new client3();
 			client.sendMessage(info);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -168,7 +159,7 @@ ControllerDto dt;
 					 h.setDateHistorique(LocalDate.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
-					 String info = send(h);
+					 String info = send(h,"false");
 					 client3 client = new client3();
 					 client.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -186,7 +177,7 @@ ControllerDto dt;
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					String info = send(h);
+					String info = send(h,"false");
 					client3 client = new client3();
 					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -206,7 +197,7 @@ ControllerDto dt;
 					 h.setDateHistorique(LocalDate.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
-					 String info = send(h);
+					 String info = send(h,"false");
 					 client3 client = new client3();
 					 client.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -223,7 +214,7 @@ ControllerDto dt;
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					String info = send(h);
+					String info = send(h,"false");
 					client3 client = new client3();
 					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -246,7 +237,7 @@ ControllerDto dt;
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					String info = send(h);
+					String info = send(h,"false");
 					client3 client = new client3();
 					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -260,7 +251,7 @@ ControllerDto dt;
 		h.setDateHistorique(LocalDate.now());
 		h.setEtatHistorique("access accepté");
 		hisr.save(h);
-		String info = send(h);
+		String info = send(h,"true");
 		client3 client = new client3();
 		client.sendMessage(info);
 		//return "haw s7ii7 mara7be";
@@ -268,10 +259,6 @@ ControllerDto dt;
 				.body("zaretna el barka");
 
 
-	}
-	@GetMapping("/connected")
-	public Set<String> getConnectedIPAddresses(IPMonitor ipMonitor) {
-		return ipMonitor.getConnectedIPAddresses();
 	}
 	///////// sawer el materiellllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 	// amélioration de pris de décision

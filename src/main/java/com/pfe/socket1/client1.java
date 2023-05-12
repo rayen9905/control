@@ -33,7 +33,7 @@ public class client1 {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        System.out.println("Connected to server");
+        System.out.println("Connected to server client1");
     }
 
     @OnClose
