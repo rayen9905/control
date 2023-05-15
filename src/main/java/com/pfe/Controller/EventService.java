@@ -131,7 +131,7 @@ public class EventService {
             return builder.or(etePredicate, datePredicate,timePredicate);
         };
     }
-    @PostMapping("/products")
+    @PostMapping("/filterEV")
     public List<Event> getProducts(@RequestBody FilterEv fe) {
         Type_Evt maxPrice=null;
         LocalDate category=LocalDate.of(2023,5,3);

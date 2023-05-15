@@ -71,9 +71,20 @@ DepartementDto dt;
 		}
 		return udt;
 	}*/
-	@GetMapping(value="/all")
+	@GetMapping(value="all")
 	public List<Departement> getAlldeps() {
 		return depr.findAll();
+	}
+	@GetMapping(value="/getByDep/{id}")
+	public List<Porte> getByDep(@PathVariable Long id) {
+		Departement d= depr.getById(id);
+		List<Porte> ccc= new ArrayList<>();
+		List<Controlleur> c= d.getCntrls();
+		for (Controlleur cc:c
+			 ) {
+			ccc.addAll(cc.getPorte());
+		}
+		return ccc;
 	}
 
 	@GetMapping(value="/get-one/{id}")

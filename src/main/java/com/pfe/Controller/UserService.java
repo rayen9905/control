@@ -55,7 +55,7 @@ public ResponseEntity<User> adduser(@RequestBody User user,@PathVariable List<Lo
 		User u=usrr.save(user);
 	return u.getId();
 	}
-	@PostMapping(value="/addd/{i}/{u}")
+	@GetMapping(value="/addd/{i}/{u}")
 	public void adduserprt(@PathVariable Long i,@PathVariable int u) {
 	    User uu = usrr.getById(u);
 	    Porte p = prtr.getById(i);

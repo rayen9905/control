@@ -21,14 +21,5 @@ public class ControllerDto {
     private DepartementDto dept;
 
     static DepartementDto dt;
-    public static ControllerDto toDto(Controlleur c) {
-        Departement d = c.getDept();
-        DepartementDto dtt = dt.toDto(d);
-        return ControllerDto.builder()
-                .IdCont(c.getIdCont())
-                .NomCont(c.getNomCont())
-                .Status(c.getStatus())
-                .dept(dtt)
-                .build();
-    }
+
 }

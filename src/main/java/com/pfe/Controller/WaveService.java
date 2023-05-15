@@ -1,9 +1,8 @@
 package com.pfe.Controller;
 
 import com.pfe.DTO.ProfileDto;
-import com.pfe.entities.Controlleur;
-import com.pfe.entities.Profile;
-import com.pfe.entities.WaveShare;
+import com.pfe.entities.*;
+import com.pfe.repos.EventRepository;
 import com.pfe.repos.ProfileRepository;
 import com.pfe.repos.WaveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import java.util.List;
 public class WaveService {
     @Autowired(required=true)
     WaveRepository waver;
+    @Autowired(required=true)
+    EventRepository evtr;
 
     private WaveShare w;
     ProfileDto dt;
@@ -79,4 +80,13 @@ public WaveShare getwbyid(String mac){
         }
         return udt;
     }*/
+ @GetMapping(value="/adddd/{i}/{u}")
+ public void adduserprttt(@PathVariable Long i,@PathVariable String u) {
+     WaveShare uu = waver.getById(u);
+     Event p = evtr.getById(i);
+     List<WaveShare> lp =new ArrayList<>();
+     lp.add(uu);
+     p.setWaves(lp);
+     evtr.save(p);
+ }
 }

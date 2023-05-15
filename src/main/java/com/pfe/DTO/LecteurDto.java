@@ -15,13 +15,5 @@ public class LecteurDto {
     private PorteDto prt;
 
     static PorteDto dt;
-    public static LecteurDto toDto(Lecteur l) {
-        PorteDto pd= dt.toDto(l.getPrt());
 
-        return LecteurDto.builder()
-                .IdLecteur(l.getIdLecteur())
-                .IpAdresse(l.getIpAdresse())
-                .prt(pd)
-                .build();
-    }
 }

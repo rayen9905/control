@@ -22,17 +22,5 @@ public class ProfileDto {
     private String NomProfile;
     private List<UserDto> usr;
     static UserDto dt;
-    public static ProfileDto toDto(Profile p) {
-        List<UserDto> us= new ArrayList<>();
-        List<User> u= p.getUsr();
-        for (User uu:u
-             ) {
-            us.add(dt.toDto(uu));
-        }
-        return ProfileDto.builder()
-                .IdProf(p.getIdProf())
-                .NomProfile(p.getNomProfile())
-                .usr(us)
-                .build();
-    }
+
 }

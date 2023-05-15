@@ -36,30 +36,7 @@ public class UserDto {
 
     static ProfileDto pd;
     static PorteDto pdd;
-    public static UserDto toDto(User u){
-        List<PorteDto> le = new ArrayList<>();
-        List<Porte> l= u.getPrt();
-        for (Porte ltt:l
-        ) {
-            le.add(pdd.toDto((ltt)));
-        }
-        ProfileDto p= pd.toDto(u.getProf());
-        return UserDto.builder()
-                .id(u.getId())
-                .firstname(u.getFirstname())
-                .lastname(u.getLastname())
-                .email(u.getEmail())
-                .password(u.getPassword())
-                .CodePin(u.getCodePin())
-                .CodeUid(u.getCodeUid())
-                .Phone(u.getPhone())
-                .Adresse(u.getAdresse())
-                .Image(u.getImage())
-                .role(u.getRole())
-                .prof(p)
-                .prt(le)
-                .auth((Collection<GrantedAuthority>) u.getAuthorities())
-                .build();}
+
 
 
     }

@@ -43,13 +43,10 @@ static PorteDto dt;
 	    updateporte(porte);
 	    return ResponseEntity.ok().build();
 	  }
-	@GetMapping(value="/getadr1")
-	public PorteDto getbyadr1(){
-		Porte p= prtr.findByadresse("9ca525b998e4");
-		return dt.toDto(p);
-	  }
+
 	@GetMapping(value="/getadr")
 	public Porte getbyadr(String mac){
+		mac="9ca525b998e4";
 		Porte p= prtr.findByadresse(mac);
 		return p;
 	}
