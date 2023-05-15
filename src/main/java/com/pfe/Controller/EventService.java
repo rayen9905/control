@@ -2,10 +2,14 @@ package com.pfe.Controller;
 
 import com.pfe.entities.Controlleur;
 import com.pfe.entities.Event;
+import com.pfe.entities.Type_Evt;
 import com.pfe.entities.WaveShare;
 import com.pfe.repos.EventRepository;
 import com.pfe.repos.WaveRepository;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +76,19 @@ public class EventService {
         //return datee=new Date("2023/05/03");
         return evtr.countevent(ev,date);
     }
+    @GetMapping(value = "/countev")
+    public List<Event> countevent1(@PathVariable String ev){
+        //LocalDateTime date = LocalDateTime.now();
+        //  Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+        // Date datee = new Date();
+        LocalDate date = LocalDate.now();
+        LocalDate currentDate = LocalDate.of(2023,5,3);
+        /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+        String formattedDate = currentDate.format(formatter);
+        return java.sql.Date.valueOf(formattedDate);*/
+        //return datee=new Date("2023/05/03");
+        return evtr.countevent1(date);
+    }
     @GetMapping(value = "/countt")
     public Date counteventt(){
         //LocalDateTime date = LocalDateTime.now();
@@ -101,4 +118,19 @@ public class EventService {
 
         return dates;
     }
+    public static Specification<Event> priceLessThanAndCategoryEqual(Type_Evt maxPrice, LocalDate category) {
+        return (root, query, builder) -> {
+            Predicate pricePredicate = builder.equal(root.get("EtEvent"), maxPrice);
+            Predicate categoryPredicate = builder.greaterThan(root.get("DateEvent"), category);
+            return builder.or(pricePredicate, categoryPredicate);
+        };
+    }
+    @GetMapping("/products")
+    public List<Event> getProducts() {
+        Type_Evt maxPrice=null;
+        LocalDate category=LocalDate.of(2023,5,3);
+        Specification<Event> spec = priceLessThanAndCategoryEqual(maxPrice, category);
+        return evtr.findAll(spec);
+    }
+
 }

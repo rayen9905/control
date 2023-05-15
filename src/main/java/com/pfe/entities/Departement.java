@@ -29,13 +29,10 @@ public class Departement {
 private Long IdDep;
 	@Column(name = "Nom_Departement", length = 100)
 private String NomDep;
-	
-@OneToMany(mappedBy="dept")
-@JsonIgnoreProperties("dept")
-private List<Controlleur>cntrls;
-	@OneToMany(mappedBy="dep")
-	@JsonIgnoreProperties("dep")
-	private List<Porte>porte;
+
+	@OneToMany(mappedBy="dept")
+	@JsonIgnoreProperties("dept")
+	private List<Controlleur>cntrls;
 
 	
 	

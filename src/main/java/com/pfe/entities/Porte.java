@@ -27,6 +27,8 @@ public class Porte {
 	
 	@Column(name = "Nom_Porte", length = 50)
 	private String NomPorte;
+	@Column(name = "Num_Porte")
+	private int NumPorte;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "Type", length = 50, nullable = false)
 	private TypePorte Type;
@@ -37,7 +39,7 @@ public class Porte {
 
 	@ManyToOne
 	@JsonIgnoreProperties("porte")
-	private Departement dep;
+	private Controlleur cntrl;
 
 	@ManyToMany
 	@JsonIgnoreProperties("prt")

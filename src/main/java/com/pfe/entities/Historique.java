@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Data
@@ -32,8 +33,10 @@ private Porte prt;
 @JoinColumn(name = "IdUser")
 private User usr;
 private Long IdEvent;
+
 private String cause;
 private String EtatHistorique;
 private LocalDate DateHistorique;
+private LocalTime TimeHistorique;
 
 }

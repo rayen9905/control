@@ -25,11 +25,7 @@ public class DepartementDto {
     static ControllerDto dtT;
     public static DepartementDto toDto(Departement d) {
         List<PorteDto> pt = new ArrayList<>();
-        List<Porte> p= d.getPorte();
-        for (Porte ptt:p
-        ) {
-            pt.add(dt.toDto((ptt)));
-        }
+        List<Porte> p;
         List<ControllerDto> cn = new ArrayList<>();
         List<Controlleur> cnt = d.getCntrls();
         for (Controlleur cntt:cnt

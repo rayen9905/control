@@ -3,30 +3,19 @@ package com.pfe.Controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pfe.DTO.ControllerDto;
 import com.pfe.DTO.PorteDto;
-import com.pfe.DTO.ProfileDto;
 import com.pfe.DTO.UserDto;
 import com.pfe.entities.*;
 import com.pfe.repos.ControllerRepository;
 import com.pfe.repos.HistoriqueRepository;
 import com.pfe.repos.PorteRepository;
 import com.pfe.repos.UserRepository;
-import com.pfe.socket1.client1;
-import com.pfe.socket1.client3;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -76,23 +65,6 @@ ControllerDto dt;
 		public void deleteCntById(@PathVariable Long id) {
 			cntrlr.deleteById(id);
 		}
-		/*
-		@RequestMapping(value="/deleteuser", method=RequestMethod.POST)
-		public produit getProduit(Long id) {
-			return produitRepository.findById(id).get();
-
-		}*/
-
-		/*@GetMapping(value="all")
-		public List<ControllerDto> getAllcnts() {
-			List<Controlleur> u= new ArrayList<>();
-			List<ControllerDto> udt= new ArrayList<>();
-			u=cntrlr.findAll();
-			for(Controlleur t : u){
-				udt.add(dt.toDto((t)));
-			}
-			return udt;
-		}*/
 	@GetMapping(value="all")
 	public List<Controlleur> getAllcnts() {
 			return cntrlr.findAll();
@@ -105,16 +77,8 @@ ControllerDto dt;
 	public Controlleur getone(@PathVariable Long id){
 		return cntrlr.getById(id);
 	}
-	public String send(Historique h,String res) throws JsonProcessingException {
-		Map<String, Object> jsonObject = new HashMap<>();
-		jsonObject.put("result",res);
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.registerModule(new JavaTimeModule());
-		String jsonString = objectMapper.writeValueAsString(jsonObject);
-		 return jsonString;
-	}
 	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
-	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable Long dr,@PathVariable String uid) throws IOException, EncodeException, DeploymentException, URISyntaxException {
+	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable int dr,@PathVariable String uid) throws IOException, EncodeException, DeploymentException, URISyntaxException {
 		boolean verif1 = false;
 		String uidd;
 		String ps;
@@ -123,20 +87,17 @@ ControllerDto dt;
 		Historique h = new Historique();
 		LocalDate d=LocalDate.now();
 		try {
-			Controlleur c = cntrlr.getById(cntrl);
+			Controlleur c = cntrlr.getById(cntrl);//get by serial number
 			System.out.println(c.getNomCont() + "ahawa");
 		}catch(EntityNotFoundException e){
 			//return "ghalta fel controlleur";
-			Porte p = prtr.getById(dr);
-			h.setUsr(u1);
-			h.setPrt(p);
+			//Porte p = prtr.getById(dr);
+			//h.setUsr(u1);
+			//h.setPrt(p);
 			h.setDateHistorique(LocalDate.now());
 			h.setEtatHistorique("accès refusé");
 			h.setCause("erreur du controlleur");
 			hisr.save(h);
-			String info = send(h,"false");
-			client3 client = new client3();
-			client.sendMessage(info);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("te3ba la3bed");
 
@@ -152,16 +113,14 @@ ControllerDto dt;
 					 System.out.println("98 "+u1.getCodePin());
 					 //verif=false;
 					 //return "ghalta f pin1";
-					 Porte p = prtr.getById(dr);
+					 Porte p = prtr.findBynum(cnt.getIdCont(),dr);
 					 h.setUsr(u1);
 					 h.setPrt(p);
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setDateHistorique(LocalDate.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
-					 String info = send(h,"false");
-					 client3 client = new client3();
-					 client.sendMessage(info);
+
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							 .body("te3ba la3bed");
 
@@ -170,16 +129,13 @@ ControllerDto dt;
 		}
 				catch(NullPointerException e){
 				//return "ghalta f uid1";
-					Porte p = prtr.getById(dr);
+					Porte p = prtr.findBynum(cnt.getIdCont(),dr);
 					h.setUsr(u1);
 					h.setPrt(p);
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					String info = send(h,"false");
-					client3 client = new client3();
-					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 
@@ -190,16 +146,13 @@ ControllerDto dt;
 				u1 = usrr.findByuid(uid);
 				 if (u1.getCodePin()!=null) {
 					//return "ghalta f pin2";
-					 Porte p = prtr.getById(dr);
+					 Porte p = prtr.findBynum(cnt.getIdCont(),dr);
 					 h.setUsr(u1);
 					 h.setPrt(p);
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setDateHistorique(LocalDate.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
-					 String info = send(h,"false");
-					 client3 client = new client3();
-					 client.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							 .body("te3ba la3bed");
 				 }
@@ -207,20 +160,19 @@ ControllerDto dt;
 		}
 				catch(NullPointerException e){
 				//return "ghalta f uid2";
-					Porte p = prtr.getById(dr);
+					Porte p = prtr.findBynum(cnt.getIdCont(),dr);
 					h.setUsr(u1);
 					h.setPrt(p);
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					String info = send(h,"false");
-					client3 client = new client3();
-					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 				}
-				Porte p = prtr.getById(dr);
+		        List<Porte> pdd= cnt.getPorte();
+		         Porte p = prtr.findBynum(cnt.getIdCont(),dr);
+				//Porte p = prtr.getById(dr);
 				List<Porte> pd = u1.getPrt();
 				for (Porte pt : pd
 				) {
@@ -237,9 +189,6 @@ ControllerDto dt;
 					h.setDateHistorique(LocalDate.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
-					String info = send(h,"false");
-					client3 client = new client3();
-					client.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 
@@ -251,9 +200,6 @@ ControllerDto dt;
 		h.setDateHistorique(LocalDate.now());
 		h.setEtatHistorique("access accepté");
 		hisr.save(h);
-		String info = send(h,"true");
-		client3 client = new client3();
-		client.sendMessage(info);
 		//return "haw s7ii7 mara7be";
 		return ResponseEntity.status(HttpStatus.OK)
 				.body("zaretna el barka");

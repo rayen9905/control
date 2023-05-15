@@ -93,4 +93,7 @@ static PorteDto dt;
 	public Porte getone(@PathVariable Long id){
 		return prtr.getById(id);
 	}
+   public Porte getBysn(Long a, int b){
+		return prtr.findBynum(a,b);
+}
 }

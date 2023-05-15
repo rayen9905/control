@@ -75,12 +75,7 @@ DepartementDto dt;
 	public List<Departement> getAlldeps() {
 		return depr.findAll();
 	}
-	@GetMapping(value="/getByDep/{id}")
-	public List<Porte> getBydeps(@PathVariable Long id) {
-		Departement d =depr.getById(id);
-	  List<Porte>p=d.getPorte();
-	  return p;
-	}
+
 	@GetMapping(value="/get-one/{id}")
 	public Departement getone(@PathVariable Long id){
 		return depr.getById(id);

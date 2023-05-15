@@ -33,12 +33,17 @@ private Long IdCont;
 	
 @Column(name = "Nom_Controlleur", length = 100)
 private String NomCont;
+	@Column(name = "Serial_Number")
+	private String Serial_Number;
 
 @Enumerated(EnumType.STRING)
 @Column(name = "Status", length = 50, nullable = false)
 private StatuCntrl Status;
 	@Column(name = "Ip_Adresse", length = 500)
 	private String IpAdresse;
+	@OneToMany(mappedBy="cntrl")
+	@JsonIgnoreProperties("cntrl")
+	private List<Porte>porte;
 
 @ManyToOne
 @JsonIgnoreProperties("cntrls")

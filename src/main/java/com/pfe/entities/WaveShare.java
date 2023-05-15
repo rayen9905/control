@@ -20,6 +20,8 @@ public class WaveShare {
     private String Adresse;
     @Column(name = "Status", length = 100)
     private String Status;
+    @Column(name = "Name_Device", length = 100)
+    private String NameDevice;
     @OneToOne(mappedBy = "wsh")
     private Porte prt;
     @ManyToMany

@@ -30,6 +30,7 @@ public class PorteDto {
 
 
     public static PorteDto toDto(Porte p) {
+
         List<LecteurDto> le = new ArrayList<>();
         List<Lecteur> l= new ArrayList<>();
         l=p.getLecteur();
@@ -43,7 +44,7 @@ public class PorteDto {
         ) {
             ur.add(dtt.toDto((utt)));
         }
-        DepartementDto d = dttt.toDto(p.getDep());
+        DepartementDto d ;
         return PorteDto.builder()
                 .IdPorte(p.getIdPorte())
                 .NomPorte(p.getNomPorte())
@@ -64,3 +65,4 @@ public class PorteDto {
                 .build();
     }
 }
+

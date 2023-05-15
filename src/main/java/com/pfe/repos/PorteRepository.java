@@ -13,5 +13,8 @@ import java.util.Optional;
 public interface PorteRepository extends JpaRepository<Porte, Long> {
     @Query(value = "select * from porte where wsh_adresse = :em",nativeQuery=true)
     Porte findByadresse(@Param("em")String adr);
+
+    @Query(value = "select * from porte where cntrl_id_cont = :em and num_porte = :np",nativeQuery=true)
+    Porte findBynum(@Param("em")Long adr,@Param("np")int np);
 }
 

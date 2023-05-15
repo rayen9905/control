@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.pfe.DTO.HistoriqueDto;
 import com.pfe.entities.Controlleur;
+import com.pfe.entities.Event;
 import com.pfe.entities.Historique;
 import com.pfe.repos.HistoriqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +124,32 @@ public class HistoriqueService {
 			hd.add(h);
 		}
 		return hd;
+	}
+	@GetMapping(value = "/counthis")
+	public List<Historique> countehis1(){
+		//LocalDateTime date = LocalDateTime.now();
+		//  Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+		// Date datee = new Date();
+		LocalDate date = LocalDate.now();
+		LocalDate currentDate = LocalDate.of(2023,5,3);
+        /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+        String formattedDate = currentDate.format(formatter);
+        return java.sql.Date.valueOf(formattedDate);*/
+		//return datee=new Date("2023/05/03");
+		return hisr.counthis1(date);
+	}
+	@GetMapping(value = "/counthis/{dep}")
+	public int blocbydep(@PathVariable String dep){
+		LocalDate date = LocalDate.now();
+		List<Historique> his=hisr.counthis2("accès refusé",date);
+		List<Historique> his1=new ArrayList<>();
+		for (Historique h: his
+			 ) {
+			if(h.getPrt().getCntrl().getDept().getNomDep()==dep){
+				his1.add(h);
+			}
+		}
+		return  his1.size();
 	}
 }
 //controlleur/reader/

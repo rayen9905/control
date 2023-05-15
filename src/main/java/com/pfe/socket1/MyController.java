@@ -8,6 +8,7 @@ import com.pfe.DTO.PorteDto;
 import com.pfe.entities.*;
 import com.pfe.repos.HistoriqueRepository;
 import com.pfe.repos.WaveRepository;
+import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
 import jakarta.xml.bind.DatatypeConverter;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -44,7 +46,22 @@ public class MyController {
     private WaveService ws;
     @Autowired(required=true)
     private WaveRepository wss;
-    public void info(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException {
+    public String send(Historique h) throws JsonProcessingException {
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("idhis",h.getIdHis());
+        jsonObject.put("date",h.getDateHistorique());
+        jsonObject.put("time",h.getTimeHistorique());
+        jsonObject.put("nomporte",h.getPrt().getNomPorte());
+        jsonObject.put("Departement",h.getPrt().getCntrl().getDept().getNomDep());
+        jsonObject.put("etat",h.getEtatHistorique());
+        jsonObject.put("cause",h.getCause());
+        jsonObject.put("idevent",h.getIdEvent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String jsonString = objectMapper.writeValueAsString(jsonObject);
+        return jsonString;
+    }
+    public void info(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
         List<Event> ww = new ArrayList<>();
         Event e= new Event();
         String mac = rep.substring(0,12);
@@ -64,9 +81,14 @@ public class MyController {
         wss.save(w);
         Historique h=hs.gethisbyprt(pr.getIdPorte());
         h.setIdEvent(e1.getIdEvent());
+        String info=send(h);
         hss.save(h);
+        client3 client=new client3();
+        client.sendMessage(info);
         Map<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("idporte", pr.getIdPorte());
+        jsonObject.put("nomporte", pr.getNomPorte());
+        jsonObject.put("departement", pr.getCntrl().getDept().getNomDep());
         jsonObject.put("etatevt", e1.getEtEvent());
         jsonObject.put("dateevnt", e1.getDateEvent());
         jsonObject.put("timeevnt", e1.getTimeEvent());
@@ -99,7 +121,10 @@ public class MyController {
         w.setEvents(ww);
         wss.save(w);
         Map<String, Object> jsonObject = new HashMap<>();
+
         jsonObject.put("idporte", pr.getIdPorte());
+        jsonObject.put("nomporte", pr.getNomPorte());
+        jsonObject.put("departement", pr.getCntrl().getDept().getNomDep());
         jsonObject.put("etatevt", e1.getEtEvent());
         jsonObject.put("dateevnt", e1.getDateEvent());
         jsonObject.put("timeevnt", e1.getTimeEvent());
@@ -108,6 +133,44 @@ public class MyController {
         objectMapper.registerModule(new JavaTimeModule());
         String jsonString = objectMapper.writeValueAsString(jsonObject);
         //return jsonString;
+        client1.sendMessage(jsonString);
+    }
+    public void info3(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
+        List<Event> ww = new ArrayList<>();
+        Event e= new Event();
+        String mac = rep.substring(0,12);
+        //System.out.println(mac);
+        Porte pr = ps.getbyadr(mac);
+        WaveShare w=ws.getwbyid(mac);
+        ww=w.getEvents();
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+        e.setDateEvent(date);
+        e.setTimeEvent(time);
+        e.setEtEvent(a);
+        Event e1=es.addevt(e);
+        ww.add(e1);
+        w.setEvents(ww);
+        wss.save(w);
+        /*Historique h=hs.gethisbyprt(pr.getIdPorte());
+        h.setIdEvent(e1.getIdEvent());
+        String info=send(h);
+        Historique h1=hss.save(h);
+        String info=send(h);
+        client3 client=new client3();
+        client.sendMessage(info);*/
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("idporte", pr.getIdPorte());
+        jsonObject.put("nomporte", pr.getNomPorte());
+        jsonObject.put("departement", pr.getCntrl().getDept().getNomDep());
+        jsonObject.put("etatevt", e1.getEtEvent());
+        jsonObject.put("dateevnt", e1.getDateEvent());
+        jsonObject.put("timeevnt", e1.getTimeEvent());
+        jsonObject.put("idevent",e1.getIdEvent());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String jsonString = objectMapper.writeValueAsString(jsonObject);
         client1.sendMessage(jsonString);
     }
 
@@ -156,7 +219,7 @@ public class MyController {
 
                     } else if ((rep.contains("120089"))) {
 
-                        info(rep, client1, Type_Evt.Entry_Close);
+                        info3(rep, client1, Type_Evt.Entry_Close);
 
 
                     } else if (rep.contains("31011")) {
@@ -164,7 +227,7 @@ public class MyController {
 
 
                     } else if (rep.contains("120088")) {
-                        info(rep, client1, Type_Evt.Exist_Close);
+                        info3(rep, client1, Type_Evt.Exist_Close);
 
                     }
                     // rep=client.getInetAddress().getHostAddress();
