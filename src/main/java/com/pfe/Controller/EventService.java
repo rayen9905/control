@@ -1,5 +1,6 @@
 package com.pfe.Controller;
 
+import com.pfe.DTO.FilterEv;
 import com.pfe.entities.Controlleur;
 import com.pfe.entities.Event;
 import com.pfe.entities.Type_Evt;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -77,7 +79,7 @@ public class EventService {
         return evtr.countevent(ev,date);
     }
     @GetMapping(value = "/countev")
-    public List<Event> countevent1(@PathVariable String ev){
+    public List<Event> countevent1(){
         //LocalDateTime date = LocalDateTime.now();
         //  Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
         // Date datee = new Date();
@@ -118,18 +120,22 @@ public class EventService {
 
         return dates;
     }
-    public static Specification<Event> priceLessThanAndCategoryEqual(Type_Evt maxPrice, LocalDate category) {
+    public static Specification<Event> priceLessThanAndCategoryEqual(Type_Evt ete, LocalDate db, LocalDate df, LocalTime td,LocalTime tf) {
         return (root, query, builder) -> {
-            Predicate pricePredicate = builder.equal(root.get("EtEvent"), maxPrice);
-            Predicate categoryPredicate = builder.greaterThan(root.get("DateEvent"), category);
-            return builder.or(pricePredicate, categoryPredicate);
+            Predicate etePredicate = builder.equal(root.get("EtEvent"), ete);
+           // Predicate categoryPredicate = builder.greaterThan(root.get("DateEvent"), category);
+            Predicate datePredicate = builder.between(root.get("DateEvent"), db,df);
+            Predicate timePredicate = builder.between(root.get("TimeEvent"), db,df);
+
+
+            return builder.or(etePredicate, datePredicate,timePredicate);
         };
     }
-    @GetMapping("/products")
-    public List<Event> getProducts() {
+    @PostMapping("/products")
+    public List<Event> getProducts(@RequestBody FilterEv fe) {
         Type_Evt maxPrice=null;
         LocalDate category=LocalDate.of(2023,5,3);
-        Specification<Event> spec = priceLessThanAndCategoryEqual(maxPrice, category);
+        Specification<Event> spec = priceLessThanAndCategoryEqual(fe.getTypeEv(), fe.getDateDeb(),fe.getDateFin(),fe.getTimeDeb(),fe.getTimeFin());
         return evtr.findAll(spec);
     }
 

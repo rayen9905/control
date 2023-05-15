@@ -59,11 +59,10 @@ public ResponseEntity<User> adduser(@RequestBody User user,@PathVariable List<Lo
 	public void adduserprt(@PathVariable Long i,@PathVariable int u) {
 	    User uu = usrr.getById(u);
 	    Porte p = prtr.getById(i);
-		List<User> pr1 = p.getUsr();
-		pr1.add(uu);
-
-		p.setUsr(pr1);
-		prtr.save(p);
+		List<Porte> lp =new ArrayList<>();
+		lp.add(p);
+		uu.setPrt(lp);
+		usrr.save(uu);
 	}
 public User updateuser(@RequestBody User u) {
 	return usrr.save(u);

@@ -71,7 +71,7 @@ DepartementDto dt;
 		}
 		return udt;
 	}*/
-	@GetMapping(value="all")
+	@GetMapping(value="/all")
 	public List<Departement> getAlldeps() {
 		return depr.findAll();
 	}

@@ -24,6 +24,4 @@ public class WaveShare {
     private String NameDevice;
     @OneToOne(mappedBy = "wsh")
     private Porte prt;
-    @ManyToMany
-    private List<Event> events;
 }

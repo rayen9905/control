@@ -41,10 +41,6 @@ public class Porte {
 	@JsonIgnoreProperties("porte")
 	private Controlleur cntrl;
 
-	@ManyToMany
-	@JsonIgnoreProperties("prt")
-	private List<User> usr;
-
 	@OneToOne
 	@JsonIgnoreProperties("prt")
 	private WaveShare wsh;

@@ -62,23 +62,25 @@ public class MyController {
         return jsonString;
     }
     public void info(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
-        List<Event> ww = new ArrayList<>();
+        List<WaveShare> ww = new ArrayList<>();
         Event e= new Event();
         String mac = rep.substring(0,12);
         //System.out.println(mac);
         Porte pr = ps.getbyadr(mac);
         WaveShare w=ws.getwbyid(mac);
-        ww=w.getEvents();
+        //ww=w.getEvents();
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
         e.setDateEvent(date);
         e.setTimeEvent(time);
         e.setEtEvent(a);
+        ww.add(w);
+        e.setWaves(ww);
         Event e1=es.addevt(e);
-        ww.add(e1);
+        /*ww.add(e1);
         w.setEvents(ww);
-        wss.save(w);
+        wss.save(w);*/
         Historique h=hs.gethisbyprt(pr.getIdPorte());
         h.setIdEvent(e1.getIdEvent());
         String info=send(h);
@@ -99,12 +101,12 @@ public class MyController {
          client1.sendMessage(jsonString);
     }
     public void info1(String rep,client1 client1,Type_Evt a) throws IOException, EncodeException {
-        List<Event> ww = new ArrayList<>();
+        List<WaveShare> ww = new ArrayList<>();
         String mac = rep.substring(0,12);
         //System.out.println(mac);
         Porte pr = ps.getbyadr(mac);
         WaveShare w=ws.getwbyid(mac);
-        ww=w.getEvents();
+        //ww=w.getEvents();
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -116,10 +118,9 @@ public class MyController {
         e.setDateEvent(date);
         e.setTimeEvent(localTimee);
         e.setEtEvent(a);
+        ww.add(w);
+        e.setWaves(ww);
         Event e1=es.addevt(e);
-        ww.add(e1);
-        w.setEvents(ww);
-        wss.save(w);
         Map<String, Object> jsonObject = new HashMap<>();
 
         jsonObject.put("idporte", pr.getIdPorte());
@@ -136,23 +137,22 @@ public class MyController {
         client1.sendMessage(jsonString);
     }
     public void info3(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
-        List<Event> ww = new ArrayList<>();
+        List<WaveShare> ww = new ArrayList<>();
         Event e= new Event();
         String mac = rep.substring(0,12);
         //System.out.println(mac);
         Porte pr = ps.getbyadr(mac);
         WaveShare w=ws.getwbyid(mac);
-        ww=w.getEvents();
+       // ww=w.getEvents();
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         //Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
         e.setDateEvent(date);
         e.setTimeEvent(time);
         e.setEtEvent(a);
+        ww.add(w);
+        e.setWaves(ww);
         Event e1=es.addevt(e);
-        ww.add(e1);
-        w.setEvents(ww);
-        wss.save(w);
         /*Historique h=hs.gethisbyprt(pr.getIdPorte());
         h.setIdEvent(e1.getIdEvent());
         String info=send(h);

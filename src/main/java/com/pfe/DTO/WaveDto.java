@@ -20,19 +20,4 @@ public class WaveDto {
     private List<EventDto> edt;
     static PorteDto dt;
     static EventDto dtt;
-    public static WaveDto toDto(WaveShare w) {
-        PorteDto pd= dt.toDto(w.getPrt());
-        List<EventDto> ev = new ArrayList<>();
-        List<Event> l= w.getEvents();
-        for (Event evt:l
-        ) {
-            ev.add(dtt.toDto((evt)));
-        }
-        return WaveDto.builder()
-                .adresse(w.getAdresse())
-                .status(w.getStatus())
-                .prt(pd)
-                .edt(ev)
-                .build();
-    }
-}
+  }
