@@ -125,7 +125,7 @@ public class HistoriqueService {
 		}
 		return hd;
 	}
-	@GetMapping(value = "/counthis")
+	@GetMapping(value = "/counthiss")
 	public List<Historique> countehis1(){
 		//LocalDateTime date = LocalDateTime.now();
 		//  Date date1 = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
@@ -138,7 +138,7 @@ public class HistoriqueService {
 		//return datee=new Date("2023/05/03");
 		return hisr.counthis1(date);
 	}
-	@GetMapping(value = "/counthis/{dep}")
+	@GetMapping(value = "/counthist/{dep}")
 	public int blocbydep(@PathVariable String dep){
 		LocalDate date = LocalDate.now();
 		List<Historique> his=hisr.counthis2("accès refusé",date);
