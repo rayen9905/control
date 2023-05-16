@@ -1,10 +1,7 @@
 package com.pfe.Controller;
 
 import com.pfe.DTO.FilterEv;
-import com.pfe.entities.Controlleur;
-import com.pfe.entities.Event;
-import com.pfe.entities.Type_Evt;
-import com.pfe.entities.WaveShare;
+import com.pfe.entities.*;
 import com.pfe.repos.EventRepository;
 import com.pfe.repos.WaveRepository;
 import jakarta.persistence.criteria.Predicate;
@@ -15,12 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.Expression;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -127,16 +126,49 @@ public class EventService {
             Predicate datePredicate = builder.between(root.get("DateEvent"), db,df);
             Predicate timePredicate = builder.between(root.get("TimeEvent"), db,df);
 
+            return builder.or(etePredicate,datePredicate,timePredicate);
 
-            return builder.or(etePredicate, datePredicate,timePredicate);
+            //return builder.or(etePredicate, datePredicate,timePredicate);
         };
     }
-    @PostMapping("/filterEV")
+    /*@PostMapping("/filterEV")
     public List<Event> getProducts(@RequestBody FilterEv fe) {
         Type_Evt maxPrice=null;
         LocalDate category=LocalDate.of(2023,5,3);
         Specification<Event> spec = priceLessThanAndCategoryEqual(fe.getTypeEv(), fe.getDateDeb(),fe.getDateFin(),fe.getTimeDeb(),fe.getTimeFin());
         return evtr.findAll(spec);
+    }*/
+    @PostMapping("/filterEV")
+    public List<Event> filtrer(@RequestBody FilterEv fe) {
+        Specification<Event> spec = Specification.where(null);
+
+        if (fe.getTypeEv() != null) {
+            spec = spec.and((root, query, builder) ->
+                    builder.equal(root.get("EtEvent"), fe.getTypeEv()));
+        }
+
+        if (fe.getDateDeb() != null) {
+            spec = spec.and((root, query, builder) ->
+                    builder.between(root.get("DateEvent"), fe.getDateDeb(),fe.getDateFin()));
+        }
+
+        if (fe.getTimeDeb() != null) {
+            spec = spec.and((root, query, builder) ->
+                    builder.between(root.get("TimeEvent"), fe.getTimeDeb(),fe.getTimeFin()));
+        }
+
+        return evtr.findAll(spec);
     }
+
+
+    @GetMapping(value = "monitoring")
+    public List<Event> monit(){
+        return evtr.monitoring("Entry_Close","Entry_Open","Exist_Open","Exist_Close");
+    }
+    @GetMapping(value = "monitoring1")
+    public List<Event> monit1(){
+        return evtr.monitoring("Intrusion_Alarm","Stayed_On","Tailing_Alarm","Reverse_Alarm");
+    }
+
 
 }

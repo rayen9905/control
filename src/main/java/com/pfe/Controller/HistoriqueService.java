@@ -4,12 +4,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.pfe.DTO.FilterEv;
 import com.pfe.DTO.HistoriqueDto;
 import com.pfe.entities.Controlleur;
 import com.pfe.entities.Event;
 import com.pfe.entities.Historique;
 import com.pfe.repos.HistoriqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -150,6 +153,27 @@ public class HistoriqueService {
 			}
 		}
 		return  his1.size();
+	}
+	@PostMapping("/filterEV1")
+	public List<Historique> filtrer1(@RequestBody FilterEv fe) {
+		Specification<Event> spec = Specification.where(null);
+
+		if (fe.getTypeEv() != null) {
+			spec = spec.and((root, query, builder) ->
+					builder.equal(root.get("EtatHistorique"), fe.getTypeEv()));
+		}
+
+		if (fe.getDateDeb() != null) {
+			spec = spec.and((root, query, builder) ->
+					builder.between(root.get("DateHistorique"), fe.getDateDeb(),fe.getDateFin()));
+		}
+
+		if (fe.getTimeDeb() != null) {
+			spec = spec.and((root, query, builder) ->
+					builder.between(root.get("TimeHistorique"), fe.getTimeDeb(),fe.getTimeFin()));
+		}
+
+		return evtr.findAll(spec);
 	}
 }
 //controlleur/reader/

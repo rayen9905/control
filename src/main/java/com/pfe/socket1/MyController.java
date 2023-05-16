@@ -84,8 +84,8 @@ public class MyController {
         wss.save(w);*/
         Historique h=hs.gethisbyprt(pr.getIdPorte());
         h.setIdEvent(e1.getIdEvent());
-        String info=send(h);
         hss.save(h);
+        String info=send(h);
         client3 client=new client3();
         client.sendMessage(info);
         Map<String, Object> jsonObject = new HashMap<>();
