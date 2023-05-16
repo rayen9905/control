@@ -14,9 +14,9 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilterEv {
-    private LocalDate dateDeb;
-    private LocalDate dateFin;
-    private LocalTime timeDeb;
-    private LocalTime timeFin;
-    private Type_Evt typeEv;
+    private String dateDeb;
+    private String dateFin;
+    private String timeDeb;
+    private String timeFin;
+    private String typeEv;
 }

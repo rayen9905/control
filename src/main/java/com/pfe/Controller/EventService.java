@@ -148,13 +148,21 @@ public class EventService {
         }
 
         if (fe.getDateDeb() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Define the format of the input string
+            LocalDate localDate1 = LocalDate.parse(fe.getDateDeb(), formatter);
+            LocalDate localDate2 = LocalDate.parse(fe.getDateFin(), formatter);
+
             spec = spec.and((root, query, builder) ->
-                    builder.between(root.get("DateEvent"), fe.getDateDeb(),fe.getDateFin()));
+                    builder.between(root.get("DateEvent"), localDate1,localDate2));
         }
 
         if (fe.getTimeDeb() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalTime localTimee1 = LocalTime.parse(fe.getTimeDeb(), formatter);
+            LocalTime localTimee2 = LocalTime.parse(fe.getTimeFin(), formatter);
+
             spec = spec.and((root, query, builder) ->
-                    builder.between(root.get("TimeEvent"), fe.getTimeDeb(),fe.getTimeFin()));
+                    builder.between(root.get("TimeEvent"), localTimee1,localTimee2));
         }
 
         return evtr.findAll(spec);
