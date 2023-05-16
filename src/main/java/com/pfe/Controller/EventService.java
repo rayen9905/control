@@ -141,14 +141,14 @@ public class EventService {
     @PostMapping("/filterEV")
     public List<Event> filtrer(@RequestBody FilterEv fe) {
         Specification<Event> spec = Specification.where(null);
-
         if (fe.getTypeEv() != null) {
+            Type_Evt myEnum = Type_Evt.valueOf(fe.getTypeEv());
             spec = spec.and((root, query, builder) ->
-                    builder.equal(root.get("EtEvent"), fe.getTypeEv()));
+                    builder.equal(root.get("EtEvent"), myEnum));
         }
 
         if (fe.getDateDeb() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Define the format of the input string
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-dd"); // Define the format of the input string
             LocalDate localDate1 = LocalDate.parse(fe.getDateDeb(), formatter);
             LocalDate localDate2 = LocalDate.parse(fe.getDateFin(), formatter);
 
@@ -165,9 +165,9 @@ public class EventService {
                     builder.between(root.get("TimeEvent"), localTimee1,localTimee2));
         }
 
+
         return evtr.findAll(spec);
     }
-
 
     @GetMapping(value = "monitoring")
     public List<Event> monit(){

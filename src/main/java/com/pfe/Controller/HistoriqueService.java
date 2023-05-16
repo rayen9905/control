@@ -1,15 +1,16 @@
 package com.pfe.Controller;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.pfe.DTO.FilterEv;
+import com.pfe.DTO.FilterEv2;
 import com.pfe.DTO.HistoriqueDto;
-import com.pfe.entities.Controlleur;
-import com.pfe.entities.Event;
-import com.pfe.entities.Historique;
+import com.pfe.entities.*;
+import com.pfe.repos.DepartementRepository;
 import com.pfe.repos.HistoriqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HistoriqueService {
 	@Autowired
 	private HistoriqueRepository hisr;
+	@Autowired
+	private DepartementRepository depr;
+
 
 	private Historique his;
 
@@ -154,27 +158,49 @@ public class HistoriqueService {
 		}
 		return  his1.size();
 	}
-	/*@PostMapping("/filterEV1")
-	public List<Historique> filtrer1(@RequestBody FilterEv fe) {
-		Specification<Event> spec = Specification.where(null);
+	@PostMapping("/filterEV1")
+	public List<Historique> filtrer1(@RequestBody FilterEv2 fe) {
+		Specification<Historique> spec = Specification.where(null);
+		List<Long>a=new ArrayList<>();
 
-		if (fe.getTypeEv() != null) {
+		if (fe.getEtat() != null) {
 			spec = spec.and((root, query, builder) ->
-					builder.equal(root.get("EtatHistorique"), fe.getTypeEv()));
+					builder.equal(root.get("EtatHistorique"), fe.getEtat()));
 		}
 
 		if (fe.getDateDeb() != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-dd"); // Define the format of the input string
+			LocalDate localDate1 = LocalDate.parse(fe.getDateDeb(), formatter);
+			LocalDate localDate2 = LocalDate.parse(fe.getDateFin(), formatter);
 			spec = spec.and((root, query, builder) ->
-					builder.between(root.get("DateHistorique"), fe.getDateDeb(),fe.getDateFin()));
+					builder.between(root.get("DateHistorique"), localDate1,localDate2));
 		}
 
 		if (fe.getTimeDeb() != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+			LocalTime localTimee1 = LocalTime.parse(fe.getTimeDeb(), formatter);
+			LocalTime localTimee2 = LocalTime.parse(fe.getTimeFin(), formatter);
 			spec = spec.and((root, query, builder) ->
-					builder.between(root.get("TimeHistorique"), fe.getTimeDeb(),fe.getTimeFin()));
+					builder.between(root.get("TimeHistorique"),localTimee1,localTimee2));
 		}
-
-		return evtr.findAll(spec);
-	}*/
+		if (fe.getDep() != null) {
+			Departement d= depr.getById(fe.getDep());
+			List<Controlleur> c=d.getCntrls();
+			List<Porte> p =new ArrayList<>();
+			for (Controlleur cc:c
+				 ) {
+			p.addAll(cc.getPorte());
+			}
+			for (Porte pp:p
+				 ) {
+				System.out.println(pp.getIdPorte());
+				a.add(pp.getIdPorte());
+			}
+		spec = spec.and((root, query, builder) ->
+				root.get("prt").in(a));
+		}
+		return hisr.findAll(spec);
+	}
 }
 //controlleur/reader/
 //conncted /gedh/
