@@ -154,7 +154,7 @@ public class HistoriqueService {
 		}
 		return  his1.size();
 	}
-	@PostMapping("/filterEV1")
+	/*@PostMapping("/filterEV1")
 	public List<Historique> filtrer1(@RequestBody FilterEv fe) {
 		Specification<Event> spec = Specification.where(null);
 
@@ -174,7 +174,7 @@ public class HistoriqueService {
 		}
 
 		return evtr.findAll(spec);
-	}
+	}*/
 }
 //controlleur/reader/
 //conncted /gedh/
