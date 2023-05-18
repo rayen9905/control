@@ -190,6 +190,7 @@ public class MyController {
         public void main() throws Exception {
     Socket client = null;
     String rep;
+    WaveShare wh = null;
     try {
         // Connect to the Waveshare device
         //String rep = "9ca525b998e4";
@@ -201,11 +202,16 @@ public class MyController {
 
         while (true) {
             client = socket.accept();
-           // client.getInetAddress().
+
+        /*   String b=client.getInetAddress().getHostAddress();
+            wh= ws.finbyhost(b);
+           wh.setAdresse("connected");
+           wss.save(wh);*/
+
             rep = "";
             System.out.println("new client connected");
             InputStream inputStream = client.getInputStream();
-            //rep = client.getInetAddress().getHostAddress();
+          //  rep = client.getInetAddress().getHostAddress();
             while (true) {
                 rep = rep + Integer.toHexString(inputStream.read());
 
@@ -255,6 +261,8 @@ public class MyController {
         }
         //}
     } catch (Exception e) {
+       /* wh.setAdresse("connected");
+        wss.save(wh);*/
         e.printStackTrace();
         System.out.println("Error connecting to Waveshare device");
     }

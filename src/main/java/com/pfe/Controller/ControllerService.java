@@ -3,6 +3,7 @@ package com.pfe.Controller;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import com.pfe.DTO.ControllerDto;
 import com.pfe.DTO.PorteDto;
@@ -87,14 +88,15 @@ ControllerDto dt;
 		Historique h = new Historique();
 		LocalDate d=LocalDate.now();
 		try {
-			Controlleur c = cntrlr.getById(cntrl);//get by serial number
-			System.out.println(c.getNomCont() + "ahawa");
+			 cnt = cntrlr.getById(cntrl);//get by serial number
+			System.out.println(cnt.getNomCont() + "ahawa");
 		}catch(EntityNotFoundException e){
 			//return "ghalta fel controlleur";
 			//Porte p = prtr.getById(dr);
 			//h.setUsr(u1);
 			//h.setPrt(p);
 			h.setDateHistorique(LocalDate.now());
+			h.setTimeHistorique(LocalTime.now());
 			h.setEtatHistorique("accès refusé");
 			h.setCause("erreur du controlleur");
 			hisr.save(h);
@@ -118,6 +120,7 @@ ControllerDto dt;
 					 h.setPrt(p);
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setDateHistorique(LocalDate.now());
+					 h.setTimeHistorique(LocalTime.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
 
@@ -134,6 +137,7 @@ ControllerDto dt;
 					h.setPrt(p);
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setDateHistorique(LocalDate.now());
+					h.setTimeHistorique(LocalTime.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -151,6 +155,7 @@ ControllerDto dt;
 					 h.setPrt(p);
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setDateHistorique(LocalDate.now());
+					 h.setTimeHistorique(LocalTime.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -165,6 +170,7 @@ ControllerDto dt;
 					h.setPrt(p);
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setDateHistorique(LocalDate.now());
+					h.setTimeHistorique(LocalTime.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -187,6 +193,7 @@ ControllerDto dt;
 					h.setPrt(p);
 					h.setCause("Porte Non Autorisé");
 					h.setDateHistorique(LocalDate.now());
+					h.setTimeHistorique(LocalTime.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -198,6 +205,7 @@ ControllerDto dt;
 		h.setPrt(p);
 		h.setCause("pas de probléme");
 		h.setDateHistorique(LocalDate.now());
+		h.setTimeHistorique(LocalTime.now());
 		h.setEtatHistorique("access accepté");
 		hisr.save(h);
 		//return "haw s7ii7 mara7be";

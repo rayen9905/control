@@ -168,14 +168,40 @@ public class EventService {
 
         return evtr.findAll(spec);
     }
+    @GetMapping("/alarmEV")
+    public List<Event> filtrerr() {
+        Specification<Event> spec = Specification.where(null);
+        List<Type_Evt>a=new ArrayList<>();
+        a.add(Type_Evt.Intrusion_Alarm);
+        a.add(Type_Evt.Reverse_Alarm);
+        a.add(Type_Evt.Stayed_On);
+        a.add(Type_Evt.Tailing_Alarm);
 
-    @GetMapping(value = "monitoring")
-    public List<Event> monit(){
-        return evtr.monitoring("Entry_Close","Entry_Open","Exist_Open","Exist_Close");
+        spec = spec.and((root, query, builder) ->
+                root.get("EtEvent").in(a));
+        LocalDate localDate1=LocalDate.now();
+        spec = spec.and((root, query, builder) ->
+                builder.equal(root.get("DateEvent"), localDate1));
+
+        return evtr.findAll(spec);
     }
-    @GetMapping(value = "monitoring1")
-    public List<Event> monit1(){
-        return evtr.monitoring("Intrusion_Alarm","Stayed_On","Tailing_Alarm","Reverse_Alarm");
+
+    @GetMapping("/monitEV")
+    public List<Event> filtre() {
+        Specification<Event> spec = Specification.where(null);
+        List<Type_Evt>a=new ArrayList<>();
+        a.add(Type_Evt.Exist_Close);
+        a.add(Type_Evt.Exist_Open);
+        a.add(Type_Evt.Entry_Open);
+        a.add(Type_Evt.Entry_Close);
+
+        spec = spec.and((root, query, builder) ->
+                root.get("EtEvent").in(a));
+        LocalDate localDate1=LocalDate.now();
+        spec = spec.and((root, query, builder) ->
+                builder.equal(root.get("DateEvent"), localDate1));
+
+        return evtr.findAll(spec);
     }
 
 

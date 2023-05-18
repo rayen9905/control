@@ -19,8 +19,8 @@ public interface EventRepository extends JpaRepository<Event, Long> , JpaSpecifi
    Long countevent(@Param("em")String adr, @Param("d") LocalDate dd);
     @Query(value = "select * from event where date_event = :em ",nativeQuery=true)
     List<Event> countevent1(@Param("em") LocalDate dd);
-    @Query(value = "select * from event where et_event != :a or et_event != :b or et_event != :c or et_event != :d ",nativeQuery=true)
-    List<Event> monitoring(@Param("a")String a,@Param("b")String b,@Param("c") String c,@Param("d") String d);
-    @Query(value = "select * from event where et_event != :a or et_event != :b or et_event != :c or et_event != :d ",nativeQuery=true)
-    List<Event> monitoring1(@Param("a")String a,@Param("b")String b,@Param("c") String c,@Param("d") String d);
+    @Query(value = "select * from event where et_event != :a or et_event != :b or et_event != :c or et_event != :d and date_event = :e ",nativeQuery=true)
+    List<Event> monitoring(@Param("a")String a,@Param("b")String b,@Param("c") String c,@Param("d") String d,@Param("e") LocalDate e);
+    @Query(value = "select * from event where et_event != :a or et_event != :b or et_event != :c or et_event != :d and date_event = :e ",nativeQuery=true)
+    List<Event> monitoring1(@Param("a")String a,@Param("b")String b,@Param("c") String c,@Param("d") String d,@Param("e") LocalDate e);
 }

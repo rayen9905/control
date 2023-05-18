@@ -2,67 +2,58 @@ package com.pfe.socket1;
 
 import org.apache.commons.net.util.SubnetUtils;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class NetworkMonitor {
-    private Map<String, Boolean> deviceStatusMap = new HashMap<>();
-
-    public void startMonitoring(String networkAddress, int interval) {
-        SubnetUtils subnetUtils = new SubnetUtils(networkAddress);
-        String[] addresses = subnetUtils.getInfo().getAllAddresses();
-
-        for (String address : addresses) {
-            deviceStatusMap.put(address, false); // initially mark all devices as disconnected
-        }
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(() -> {
-            List<String> connectedDevices = new ArrayList<>();
-            for (String address : addresses) {
-                try {
-                    InetAddress inetAddress = InetAddress.getByName(address);
-                    boolean isAlive = inetAddress.isReachable(5000); // ping the address with a timeout of 1 second
-
-                    if (isAlive) {
-                        connectedDevices.add(address);
-                    }
-                } catch (UnknownHostException e) {
-                    // ignore errors
-                } catch (Exception e) {
-                    // ignore errors
-                }
-            }
-            updateDeviceStatus(connectedDevices);
-        }, 0, interval, TimeUnit.SECONDS);
-    }
-
-    private void updateDeviceStatus(List<String> connectedDevices) {
-        for (String address : deviceStatusMap.keySet()) {
-            boolean wasConnected = deviceStatusMap.get(address);
-            boolean isConnected = connectedDevices.contains(address);
-
-            if (isConnected && !wasConnected) {
-                // device has connected
-                deviceStatusMap.put(address, true);
-                System.out.println("Device " + address + " has connected.");
-            } else if (!isConnected && wasConnected) {
-                // device has disconnected
-                deviceStatusMap.put(address, false);
-                System.out.println("Device " + address + " has disconnected.");
-            }
-        }
-    }
 
     public static void main(String[] args) {
-        NetworkMonitor networkMonitor = new NetworkMonitor();
-        networkMonitor.startMonitoring("192.168.100.1/24", 1);
+        try {
+            InetAddress localIpAddress = InetAddress.getByName("192.168.100.0");
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(localIpAddress);
+
+            System.out.println("Monitoring devices connected to the switch...");
+
+            Set<String> connectedDevices = new HashSet<>();
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                    while (addresses.hasMoreElements()) {
+                        InetAddress address = addresses.nextElement();
+                        if (!address.isLoopbackAddress() && !address.isLinkLocalAddress()) {
+                            String ipAddress = address.getHostAddress();
+
+                            if (!connectedDevices.contains(ipAddress)) {
+                                connectedDevices.add(ipAddress);
+                                System.out.println("Device connected: " + ipAddress);
+                            }
+                        }
+                    }
+
+                    connectedDevices.removeIf(ipAddress -> {
+                        try {
+                            return !InetAddress.getByName(ipAddress).isReachable(1000);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return true;
+                        }
+                    });
+
+                }
+            }, 0, 5000);
+
+        } catch (SocketException | UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
-}
+        }
