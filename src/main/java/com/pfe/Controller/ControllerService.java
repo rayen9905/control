@@ -4,7 +4,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pfe.DTO.ControllerDto;
 import com.pfe.DTO.PorteDto;
 import com.pfe.DTO.UserDto;
@@ -13,6 +19,7 @@ import com.pfe.repos.ControllerRepository;
 import com.pfe.repos.HistoriqueRepository;
 import com.pfe.repos.PorteRepository;
 import com.pfe.repos.UserRepository;
+import com.pfe.socket1.client3;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.websocket.DeploymentException;
 import jakarta.websocket.EncodeException;
@@ -78,6 +85,21 @@ ControllerDto dt;
 	public Controlleur getone(@PathVariable Long id){
 		return cntrlr.getById(id);
 	}
+	public String send(Historique h) throws JsonProcessingException {
+		Map<String, Object> jsonObject = new HashMap<>();
+		jsonObject.put("idhis",h.getIdHis());
+		jsonObject.put("date",h.getDateHistorique());
+		jsonObject.put("time",h.getTimeHistorique());
+		jsonObject.put("nomporte",h.getPrt().getNomPorte());
+		jsonObject.put("Departement",h.getPrt().getCntrl().getDept().getNomDep());
+		jsonObject.put("etat",h.getEtatHistorique());
+		jsonObject.put("cause",h.getCause());
+		jsonObject.put("idevent",h.getIdEvent());
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		String jsonString = objectMapper.writeValueAsString(jsonObject);
+		return jsonString;
+	}
 	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
 	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable int dr,@PathVariable String uid) throws IOException, EncodeException, DeploymentException, URISyntaxException {
 		boolean verif1 = false;
@@ -87,6 +109,8 @@ ControllerDto dt;
 		Porte ptt;
 		Historique h = new Historique();
 		LocalDate d=LocalDate.now();
+		client3 c3=new client3();
+
 		try {
 			 cnt = cntrlr.getById(cntrl);//get by serial number
 			System.out.println(cnt.getNomCont() + "ahawa");
@@ -100,6 +124,8 @@ ControllerDto dt;
 			h.setEtatHistorique("accès refusé");
 			h.setCause("erreur du controlleur");
 			hisr.save(h);
+			String info=send(h);
+			c3.sendMessage(info);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("te3ba la3bed");
 
@@ -123,7 +149,8 @@ ControllerDto dt;
 					 h.setTimeHistorique(LocalTime.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
-
+					 String info=send(h);
+					 c3.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							 .body("te3ba la3bed");
 
@@ -140,6 +167,8 @@ ControllerDto dt;
 					h.setTimeHistorique(LocalTime.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
+					String info=send(h);
+					c3.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 
@@ -158,6 +187,8 @@ ControllerDto dt;
 					 h.setTimeHistorique(LocalTime.now());
 					 h.setEtatHistorique("accès refusé");
 					 hisr.save(h);
+					 String info=send(h);
+					 c3.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							 .body("te3ba la3bed");
 				 }
@@ -173,6 +204,8 @@ ControllerDto dt;
 					h.setTimeHistorique(LocalTime.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
+					String info=send(h);
+					c3.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 				}
@@ -196,6 +229,8 @@ ControllerDto dt;
 					h.setTimeHistorique(LocalTime.now());
 					h.setEtatHistorique("accès refusé");
 					hisr.save(h);
+					String info=send(h);
+					c3.sendMessage(info);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 

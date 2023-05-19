@@ -141,7 +141,7 @@ public class EventService {
     @PostMapping("/filterEV")
     public List<Event> filtrer(@RequestBody FilterEv fe) {
         Specification<Event> spec = Specification.where(null);
-        if (fe.getTypeEv() != null) {
+        if ((fe.getTypeEv() != null)&&(fe.getTypeEv() !="Entry_Open")&&(fe.getTypeEv() !="Entry_Close")&&(fe.getTypeEv() !="Exist_Open")&&(fe.getTypeEv() !="Exist_Close")) {
             Type_Evt myEnum = Type_Evt.valueOf(fe.getTypeEv());
             spec = spec.and((root, query, builder) ->
                     builder.equal(root.get("EtEvent"), myEnum));
