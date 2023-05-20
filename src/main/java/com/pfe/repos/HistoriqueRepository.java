@@ -19,5 +19,7 @@ public interface HistoriqueRepository extends JpaRepository<Historique,Long> , J
     List<Historique> counthis1(@Param("em") LocalDate dd);
     @Query(value = "select * from historique where etat_historique = :em and date_historique = :emm",nativeQuery=true)
     List<Historique> counthis2(@Param("em") String dd,@Param("emm") LocalDate dh);
+    @Query(value = "select * from historique where etat_historique = :em and date_historique = :emm",nativeQuery=true)
+    List<Historique> counthisden(@Param("em") String dd,@Param("emm") LocalDate dh);
 
 }

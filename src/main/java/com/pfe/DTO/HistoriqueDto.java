@@ -17,7 +17,6 @@ import java.util.List;
 @Setter
 public class HistoriqueDto {
     private LocalDate date;
-    private int acc;
     private int den;
 
 }

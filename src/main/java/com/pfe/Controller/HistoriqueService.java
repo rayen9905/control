@@ -112,7 +112,7 @@ public class HistoriqueService {
 	public Historique getbyid(Long a) {
 		return hisr.getById(a);
 	}
-	@GetMapping(value="/counthis")
+/*	@GetMapping(value="/counthis")
 	public List<HistoriqueDto> counthis(){
 		List<HistoriqueDto>hd=new ArrayList<>();
 		HistoriqueDto hdd=new HistoriqueDto();
@@ -131,7 +131,7 @@ public class HistoriqueService {
 			hd.add(h);
 		}
 		return hd;
-	}
+	}*/
 	@GetMapping(value = "/counthiss")
 	public List<Historique> countehis1(){
 		//LocalDateTime date = LocalDateTime.now();
@@ -201,6 +201,73 @@ public class HistoriqueService {
 		}
 		return hisr.findAll(spec);
 	}
+
+	public int hac(@PathVariable LocalDate a,@PathVariable Long b){
+		/*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Define the format of the input string
+		LocalDate localDate1 = LocalDate.parse(dl, formatter);*/
+		Specification<Historique> spec = Specification.where(null);
+		spec = spec.and((root, query, builder) ->
+				builder.equal(root.get("DateHistorique"), a));
+		spec = spec.and((root, query, builder) ->
+				builder.equal(root.get("EtatHistorique"), "accès refusé"));
+		Departement d= depr.getById(b);
+		List<Controlleur> c=d.getCntrls();
+		List<Porte> p =new ArrayList<>();
+		List<Long>ld=new ArrayList<>();
+		for (Controlleur cc:c
+		) {
+			p.addAll(cc.getPorte());
+		}
+		for (Porte pp:p
+		) {
+			System.out.println(pp.getIdPorte());
+			ld.add(pp.getIdPorte());
+		}
+		spec = spec.and((root, query, builder) ->
+				root.get("prt").in(ld));
+		List<Historique> lh= hisr.findAll(spec);
+		return lh.size();
+	}
+	@GetMapping("/hac/{a}/{b}")
+	public List<HistoriqueDto> getDatess(@PathVariable int a, @PathVariable Long b) {
+		// Récupérer la date d'aujourd'hui
+		LocalDate today = LocalDate.now();
+		System.out.println(today.getDayOfMonth());
+		LocalDate currentDate;
+		List<HistoriqueDto> hd = new ArrayList<>();
+		if (a == today.getMonthValue()) {
+			currentDate = LocalDate.of(today.getYear(), a, 1);
+			for (int i = 0; i <= today.getDayOfMonth()-1; i++) {
+				HistoriqueDto h = new HistoriqueDto();
+				LocalDate date = currentDate.plusDays(i);
+				h.setDate(date);
+				h.setDen(hac(date, b));
+				hd.add(h);
+			}
+		} else if (a % 2 != 0) {
+			currentDate = LocalDate.of(today.getYear(), a, 1);
+			for (int i = 0; i <= 30; i++) {
+				HistoriqueDto h = new HistoriqueDto();
+				LocalDate date = currentDate.plusDays(i + 1);
+				h.setDate(date);
+				h.setDen(hac(date, b));
+				hd.add(h);
+			}
+		} else {
+			currentDate = LocalDate.of(today.getYear(), a, 1);
+			for (int i = 0; i <= 29; i++) {
+				HistoriqueDto h = new HistoriqueDto();
+				LocalDate date = currentDate.plusDays(i + 1);
+				h.setDate(date);
+				h.setDen(hac(date, b));
+				hd.add(h);
+
+			}
+		}
+		return hd;
+
+	}
+
 }
 //controlleur/reader/
 //conncted /gedh/

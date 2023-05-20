@@ -1,7 +1,9 @@
 package com.pfe.Controller;
 
 import com.pfe.DTO.FilterEv;
+import com.pfe.DTO.HistoriqueDto;
 import com.pfe.entities.*;
+import com.pfe.repos.DepartementRepository;
 import com.pfe.repos.EventRepository;
 import com.pfe.repos.WaveRepository;
 import jakarta.persistence.criteria.Predicate;
@@ -29,6 +31,8 @@ import java.util.List;
 public class EventService {
     @Autowired(required=true)
     EventRepository evtr;
+    @Autowired(required=true)
+    DepartementRepository depr;
 
     private Event e;
  /*   @PostMapping(value="/add")
@@ -103,8 +107,10 @@ public class EventService {
         //return datee=new Date("2023/05/03");
         //return evtr.countevent(ev,datee);
     }
-    @GetMapping("/dates")
+    @GetMapping("/dates/{a}/{b}")
     public List<String> getDates() {
+        LocalDate currentDate = LocalDate.of(2023,5,1);
+
         // Récupérer la date d'aujourd'hui
         LocalDate today = LocalDate.now();
 
