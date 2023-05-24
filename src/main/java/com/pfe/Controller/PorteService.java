@@ -44,9 +44,9 @@ static PorteDto dt;
 	    return ResponseEntity.ok().build();
 	  }
 
-	@GetMapping(value="/getadr")
+	//@GetMapping(value="/getadr")
 	public Porte getbyadr(String mac){
-		mac="9ca525b998e4";
+		//mac="9ca525b998e4";
 		Porte p= prtr.findByadresse(mac);
 		return p;
 	}
@@ -83,7 +83,7 @@ static PorteDto dt;
 		return prtr.findById(1L);
 	}
 	@GetMapping(value="/get-all")
-	public List<Porte> getbyidd() {
+	public List<Porte> getbyall() {
 		return prtr.findAll();
 	}
 	@GetMapping(value="/get-one/{id}")

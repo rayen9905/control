@@ -60,7 +60,7 @@ public class MyController {
         return jsonString;
     }
     public void info(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
-        String mac = rep.substring(0,12);
+        String mac = rep.substring(0,13);
         //System.out.println(mac);
         Porte pr = ps.getbyadr(mac);
         WaveShare w=ws.getwbyid(mac);
@@ -103,7 +103,7 @@ public class MyController {
     }
     public void info1(String rep,client1 client1,Type_Evt a) throws IOException, EncodeException {
         List<WaveShare> ww=new ArrayList<>();
-        String mac = rep.substring(0,12);
+        String mac = rep.substring(0,13);
         System.out.println(mac);
         Porte pr = ps.getbyadr(mac);
         //ww=w.getEvents();
@@ -146,7 +146,7 @@ public class MyController {
         client1.sendMessage(jsonString);
     }
     public void info3(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
-        String mac = rep.substring(0,12);
+        String mac = rep.substring(0,13);
         //System.out.println(mac);
         Porte pr = ps.getbyadr(mac);
         WaveShare w=ws.getwbyid(mac);
@@ -185,12 +185,21 @@ public class MyController {
         String jsonString = objectMapper.writeValueAsString(jsonObject);
         client1.sendMessage(jsonString);
     }
-
+    public String statutdevice(String a,LocalDate b) throws JsonProcessingException {
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("etat", a);
+        jsonObject.put("PreviousDate", b);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String jsonString = objectMapper.writeValueAsString(jsonObject);
+        return jsonString;
+    }
 @PostMapping("/webs")
         public void main() throws Exception {
     Socket client = null;
     String rep;
     WaveShare wh = null;
+    client2 c2=null;
     try {
         // Connect to the Waveshare device
         //String rep = "9ca525b998e4";
@@ -198,24 +207,33 @@ public class MyController {
         CountDownLatch latch = new CountDownLatch(1);
         WebSocketClient client1 = new WebSocketClient();
         client1 client2 = new client1();
+         c2=new client2();
+
 
 
         while (true) {
             client = socket.accept();
 
-        /*   String b=client.getInetAddress().getHostAddress();
-            wh= ws.finbyhost(b);
-           wh.setAdresse("connected");
-           wss.save(wh);*/
+           String b=client.getInetAddress().getHostName();
+          /*  String d=client.getInetAddress().getCanonicalHostName();
+            byte[] c =client.getInetAddress().getAddress();
+            System.out.println(d);
+            System.out.println(c);*/
+            wh= ws.getwbyid(b);
+            LocalDate olddate=wh.getDateStatus();
+            wh.setStatus("Connected");
+            wh.setDateStatus(LocalDate.now());
+            wss.save(wh);
+            c2.sendMessage(statutdevice("Connected",olddate));
 
-            rep = "";
+            rep = client.getInetAddress().getHostName();;
             System.out.println("new client connected");
             InputStream inputStream = client.getInputStream();
           //  rep = client.getInetAddress().getHostAddress();
             while (true) {
                 rep = rep + Integer.toHexString(inputStream.read());
 
-                if (rep.length() > 77) {
+                if (rep.length() > 78) {
                     System.out.println(rep);
                     if (rep.contains("1200860")) {
                         info1(rep, client2, Type_Evt.Intrusion_Alarm);
@@ -250,7 +268,7 @@ public class MyController {
                     }
                     // rep=client.getInetAddress().getHostAddress();
 
-                    rep = rep.substring(0, 12);
+                    rep = rep.substring(0, 13);
 
                 }
                 //rep="";
@@ -261,8 +279,10 @@ public class MyController {
         }
         //}
     } catch (Exception e) {
-       /* wh.setAdresse("connected");
-        wss.save(wh);*/
+       wh.setStatus("Disconnected");
+        wh.setDateStatus(LocalDate.now());
+        wss.save(wh);
+        c2.sendMessage(statutdevice("Disonnected",LocalDate.now()));
         e.printStackTrace();
         System.out.println("Error connecting to Waveshare device");
     }

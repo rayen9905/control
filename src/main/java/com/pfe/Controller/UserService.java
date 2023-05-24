@@ -10,6 +10,7 @@ import com.pfe.entities.Porte;
 import com.pfe.entities.User;
 import com.pfe.repos.PorteRepository;
 import com.pfe.repos.UserRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class UserService {
 
+	@Autowired
+	private service_email emailService;
 @Autowired(required=true)
 UserRepository usrr;
 	@Autowired(required=true)
@@ -122,5 +125,17 @@ public List<UserDto> getAllUsers() {
 	public Optional<User> getbyid() {
 		return usrr.findById(52);
 	}
+
+
+	@PostMapping("/send-email/{rec}")
+	public String sendEmail(@PathVariable String rec) {
+		try {
+			emailService.sendEmail(rec, "bech naba3thou email nbetou zok om 3amin", "ahla bik fagasna");
+			return "Email sent successfully.";
+		} catch (MessagingException e) {
+			return "Failed to send email: " + e.getMessage();
+		}
+	}
+
 }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -22,6 +23,8 @@ public class WaveShare {
     private String Status;
     @Column(name = "Name_Device", length = 100)
     private String NameDevice;
+    @Column(name = "Date_Status")
+    private LocalDate DateStatus;
     @OneToOne(mappedBy = "wsh")
     private Porte prt;
 }

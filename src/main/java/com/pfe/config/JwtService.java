@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
   private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
-
+private Long refreshexpiration=604800000L;
+  private Long jwtexpiration=1800000L;
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
   }
@@ -31,19 +32,28 @@ public class JwtService {
     return generateToken(new HashMap<>(), userDetails);
   }
 
+  private String buildToken(Map<String, Object> extraClaims,
+                          UserDetails userDetails,Long expiration){
+  return Jwts
+          .builder()
+          .setClaims(extraClaims)
+          .setSubject(userDetails.getUsername())
+          .setAudience(userDetails.getAuthorities().toString())
+          .setIssuedAt(new Date(System.currentTimeMillis()))
+          .setExpiration(new Date(System.currentTimeMillis() + expiration))
+          .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+          .compact();
+}
   public String generateToken(
       Map<String, Object> extraClaims,
       UserDetails userDetails
   ) {
-    return Jwts
-        .builder()
-        .setClaims(extraClaims)
-        .setSubject(userDetails.getUsername())
-            .setAudience(userDetails.getAuthorities().toString())
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 2000 * 60 * 24))
-        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-        .compact();
+return buildToken(extraClaims,userDetails,jwtexpiration);
+  }
+  public String generateRefreshToken(
+          UserDetails userDetails
+  ) {
+    return buildToken(new HashMap<>(),userDetails,refreshexpiration);
   }
 
   public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -73,5 +83,4 @@ public class JwtService {
     byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
     return Keys.hmacShaKeyFor(keyBytes);
   }
-  //taw tchedni menou
 }

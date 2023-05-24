@@ -1,6 +1,7 @@
 package com.pfe.auth;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pfe.config.JwtService;
 import com.pfe.entities.Role;
 import com.pfe.entities.Token;
@@ -8,11 +9,16 @@ import com.pfe.entities.TokenType;
 import com.pfe.entities.User;
 import com.pfe.repos.TokenRepository;
 import com.pfe.repos.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +39,12 @@ public class AuthenticationService {
         .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
+    var refreshToken = jwtService.generateRefreshToken(user);
+
     saveUserToken(savedUser, jwtToken);
     return AuthenticationResponse.builder()
         .token(jwtToken)
+            .refreshToken(refreshToken)
         .build();
   }
   public AuthenticationResponse registerAdmin(RegisterRequest request) {
@@ -48,9 +57,12 @@ public class AuthenticationService {
             .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
+    var refreshToken = jwtService.generateRefreshToken(user);
+
     saveUserToken(savedUser, jwtToken);
     return AuthenticationResponse.builder()
             .token(jwtToken)
+            .refreshToken(refreshToken)
             .build();
   }
 
@@ -91,5 +103,29 @@ public class AuthenticationService {
       token.setRevoked(true);
     });
     tokenRepository.saveAll(validUserTokens);
+  }
+  public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+    final String refreshToken;
+    final String userEmail;
+    if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+      return;
+    }
+    refreshToken = authHeader.substring(7);
+    userEmail = jwtService.extractUsername(refreshToken);
+    if (userEmail != null) {
+      var user = this.repository.findByEmail(userEmail)
+              .orElseThrow();
+      if (jwtService.isTokenValid(refreshToken, user)) {
+        var accessToken = jwtService.generateToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, accessToken);
+        var authResponse = AuthenticationResponse.builder()
+                .token(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+        new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+      }
+    }
   }
 }

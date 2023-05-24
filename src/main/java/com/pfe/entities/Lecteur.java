@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +26,10 @@ private Long IdLecteur;
 private String IpAdresse;
 	@Column(name = "Etat_Lecteur", length = 500)
 	private String EtatLecteur;
+	@Column(name = "Num_Lecteur")
+	private int NumLecteur;
+	@Column(name = "Date_Status")
+	private LocalDate DateStatus;
 
 @ManyToOne(fetch = FetchType.LAZY)
 @JoinColumn(name = "id_porte")

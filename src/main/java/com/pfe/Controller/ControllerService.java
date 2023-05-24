@@ -77,10 +77,9 @@ ControllerDto dt;
 	public List<Controlleur> getAllcnts() {
 			return cntrlr.findAll();
 	}
-	@GetMapping(value="test")
-	public Controlleur getcnttt() {
-		return cntrlr.getById(5L);
-	}
+	//public Controlleur getbysn(String sn) {
+		//return cntrlr.GetBySn(sn);
+	//}
 	@GetMapping(value="/get-one/{id}")
 	public Controlleur getone(@PathVariable Long id){
 		return cntrlr.getById(id);
@@ -101,7 +100,7 @@ ControllerDto dt;
 		return jsonString;
 	}
 	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
-	public ResponseEntity<String> rayen(@PathVariable Long cntrl,@PathVariable int dr,@PathVariable String uid) throws IOException, EncodeException, DeploymentException, URISyntaxException {
+	public ResponseEntity<String> rayen(@PathVariable String cntrl,@PathVariable int dr,@PathVariable String uid) throws IOException, EncodeException, DeploymentException, URISyntaxException {
 		boolean verif1 = false;
 		String uidd;
 		String ps;
@@ -112,7 +111,7 @@ ControllerDto dt;
 		client3 c3=new client3();
 
 		try {
-			 cnt = cntrlr.getById(cntrl);//get by serial number
+			 cnt = cntrlr.GetBySn(cntrl);//get by serial number
 			System.out.println(cnt.getNomCont() + "ahawa");
 		}catch(EntityNotFoundException e){
 			//return "ghalta fel controlleur";

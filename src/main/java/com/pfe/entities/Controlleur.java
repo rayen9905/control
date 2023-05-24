@@ -1,5 +1,6 @@
 package com.pfe.entities;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -44,6 +45,8 @@ private StatuCntrl Status;
 	@OneToMany(mappedBy="cntrl")
 	@JsonIgnoreProperties("cntrl")
 	private List<Porte>porte;
+	@Column(name = "Date_Status")
+	private LocalDate DateStatus;
 
 @ManyToOne
 @JsonIgnoreProperties("cntrls")

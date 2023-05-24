@@ -6,12 +6,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pfe.DTO.DeviceDto;
 import com.pfe.DTO.FilterEv;
 import com.pfe.DTO.FilterEv2;
 import com.pfe.DTO.HistoriqueDto;
 import com.pfe.entities.*;
-import com.pfe.repos.DepartementRepository;
-import com.pfe.repos.HistoriqueRepository;
+import com.pfe.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +33,12 @@ public class HistoriqueService {
 	private HistoriqueRepository hisr;
 	@Autowired
 	private DepartementRepository depr;
+	@Autowired
+	private ControllerRepository cr;
+	@Autowired
+	private LecteurRepository lr;
+	@Autowired
+	private WaveRepository wr;
 
 
 	private Historique his;
@@ -112,26 +118,26 @@ public class HistoriqueService {
 	public Historique getbyid(Long a) {
 		return hisr.getById(a);
 	}
-/*	@GetMapping(value="/counthis")
-	public List<HistoriqueDto> counthis(){
-		List<HistoriqueDto>hd=new ArrayList<>();
-		HistoriqueDto hdd=new HistoriqueDto();
+	@GetMapping(value="/countdev")
+	public List<DeviceDto> countdisconnected(){
+		List<DeviceDto>hd=new ArrayList<>();
+		DeviceDto hdd=new DeviceDto();
 		LocalDate today = LocalDate.now();
         hdd.setDate(today);
-		hdd.setAcc(	hisr.counthis("access accepté",today));
-        hdd.setDen(	hisr.counthis("accès refusé",today));
+		hdd.setDiconnected(wr.countdisw("Disconnected",today)+lr.countdisl("Disconnected",today)+cr.countdisc("Disconnected",today));
+
 		hd.add(hdd);
 		for (int i = 0; i < 6; i++) {
-			HistoriqueDto h= new HistoriqueDto();
+			DeviceDto h= new DeviceDto();
 			LocalDate date = today.minusDays(i + 1);
 			System.out.println(date);
 			h.setDate(date);
-			h.setAcc(	hisr.counthis("access accepté",date));
-			h.setDen(	hisr.counthis("accès refusé",date));
+			h.setDiconnected(wr.countdisw("Disconnected",date)+lr.countdisl("Disconnected",date)+cr.countdisc("Disconnected",date));
 			hd.add(h);
 		}
 		return hd;
-	}*/
+	}
+
 	@GetMapping(value = "/counthiss")
 	public List<Historique> countehis1(){
 		//LocalDateTime date = LocalDateTime.now();
