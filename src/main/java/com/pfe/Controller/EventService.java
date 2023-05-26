@@ -174,6 +174,36 @@ public class EventService {
 
         return evtr.findAll(spec);
     }
+    @PostMapping("/filterEV1")
+    public List<Event> filtrer1(@RequestBody FilterEv fe) {
+        Specification<Event> spec = Specification.where(null);
+        if ((fe.getTypeEv() != null)&&(fe.getTypeEv() !="Intrusion_Alarm")&&(fe.getTypeEv() !="Reverse_Alarm")&&(fe.getTypeEv() !="Stayed_On")&&(fe.getTypeEv() !="Tailing_Alarm")) {
+            Type_Evt myEnum = Type_Evt.valueOf(fe.getTypeEv());
+            spec = spec.and((root, query, builder) ->
+                    builder.equal(root.get("EtEvent"), myEnum));
+        }
+
+        if (fe.getDateDeb() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-dd"); // Define the format of the input string
+            LocalDate localDate1 = LocalDate.parse(fe.getDateDeb(), formatter);
+            LocalDate localDate2 = LocalDate.parse(fe.getDateFin(), formatter);
+
+            spec = spec.and((root, query, builder) ->
+                    builder.between(root.get("DateEvent"), localDate1,localDate2));
+        }
+
+        if (fe.getTimeDeb() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalTime localTimee1 = LocalTime.parse(fe.getTimeDeb(), formatter);
+            LocalTime localTimee2 = LocalTime.parse(fe.getTimeFin(), formatter);
+
+            spec = spec.and((root, query, builder) ->
+                    builder.between(root.get("TimeEvent"), localTimee1,localTimee2));
+        }
+
+
+        return evtr.findAll(spec);
+    }
     @GetMapping("/alarmEV")
     public List<Event> filtrerr() {
         Specification<Event> spec = Specification.where(null);
@@ -208,6 +238,11 @@ public class EventService {
                 builder.equal(root.get("DateEvent"), localDate1));
 
         return evtr.findAll(spec);
+    }
+    @GetMapping(value="/countall")
+    public int countAllevent() {
+
+        return evtr.findAll().size();
     }
 
 

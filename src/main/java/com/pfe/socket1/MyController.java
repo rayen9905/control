@@ -62,8 +62,8 @@ public class MyController {
     public void info(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
         String mac = rep.substring(0,13);
         //System.out.println(mac);
-        Porte pr = ps.getbyadr(mac);
         WaveShare w=ws.getwbyid(mac);
+        Porte pr = ps.getbyadr(w.getIdwave());
         //ww=w.getEvents();
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
@@ -73,7 +73,7 @@ public class MyController {
         e.setTimeEvent(time);
         e.setEtEvent(a);
         Event e1=es.addevt(e);
-        WaveShare uu = wss.getById(mac);
+        WaveShare uu = wss.getwave(mac);
         Event p = ess.getById(e1.getIdEvent());
         List<WaveShare> lp =new ArrayList<>();
         lp.add(uu);
@@ -105,7 +105,8 @@ public class MyController {
         List<WaveShare> ww=new ArrayList<>();
         String mac = rep.substring(0,13);
         System.out.println(mac);
-        Porte pr = ps.getbyadr(mac);
+        WaveShare w=ws.getwbyid(mac);
+        Porte pr = ps.getbyadr(w.getIdwave());
         //ww=w.getEvents();
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
@@ -124,7 +125,7 @@ public class MyController {
         e.setWaves(ww);*/
         Event e1=es.addevt(e);
 
-        WaveShare uu = wss.getById(mac);
+        WaveShare uu = wss.getwave(mac);
         Event p = ess.getById(e1.getIdEvent());
         List<WaveShare> lp =new ArrayList<>();
         lp.add(uu);
@@ -148,8 +149,8 @@ public class MyController {
     public void info3(String rep,WebSocketClient client1,Type_Evt a) throws IOException, EncodeException, DeploymentException, URISyntaxException {
         String mac = rep.substring(0,13);
         //System.out.println(mac);
-        Porte pr = ps.getbyadr(mac);
         WaveShare w=ws.getwbyid(mac);
+        Porte pr = ps.getbyadr(w.getIdwave());
        // ww=w.getEvents();
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
@@ -159,7 +160,7 @@ public class MyController {
         e.setTimeEvent(time);
         e.setEtEvent(a);
         Event e1=es.addevt(e);
-        WaveShare uu = wss.getById(mac);
+        WaveShare uu = wss.getwave(mac);
         Event p = ess.getById(e1.getIdEvent());
         List<WaveShare> lp =new ArrayList<>();
         lp.add(uu);

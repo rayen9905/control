@@ -87,6 +87,7 @@ public class HistoriqueService {
 		List<Historique>lhh=new ArrayList<>();
 		for (Historique h:lh
 		) {
+			//System.out.println(h.getPrt().getIdPorte());
 			if (h.getPrt().getIdPorte() == p) {
 				lhh.add(h);
 			}
@@ -95,7 +96,7 @@ public class HistoriqueService {
 		//return lhh;
 		return lhh.get(lhh.size()-1);
 	}
-	public Historique gethisbyprt(Long p) {
+	public Historique gethisbyprt(@PathVariable Long p) throws NullPointerException{
 		List<Historique>lh=hisr.findAll();
 		List<Historique>lhh=new ArrayList<>();
 		for (Historique h:lh

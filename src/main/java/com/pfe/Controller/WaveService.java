@@ -42,21 +42,21 @@ public class WaveService {
         updatewave(wa);
         return ResponseEntity.ok().build();
     }
-    @GetMapping(value="verif")
+   /* @GetMapping(value="verif")
     public WaveShare getwbyid1(){
         return waver.getById(
-                "9ca525b998e4");}
+                "9ca525b998e4");}*/
 
 public WaveShare getwbyid(String mac){
-        return waver.getById(mac);
+        return waver.getwave(mac);
 }
     @DeleteMapping(value="/delete/{id}")
-    public void deleteProfileById(@PathVariable String id)
+    public void deleteProfileById(@PathVariable Long id)
     {
         waver.deleteById(id);
     }
     @GetMapping(value="/get-one/{id}")
-    public WaveShare getone(@PathVariable String id){
+    public WaveShare getone(@PathVariable Long id){
         return waver.getById(id);
     }
    @GetMapping(value="all")
@@ -81,7 +81,7 @@ public WaveShare getwbyid(String mac){
         return udt;
     }*/
  @GetMapping(value="/adddd/{i}/{u}")
- public void adduserprttt(@PathVariable Long i,@PathVariable String u) {
+ public void adduserprttt(@PathVariable Long i,@PathVariable Long u) {
      WaveShare uu = waver.getById(u);
      Event p = evtr.getById(i);
      List<WaveShare> lp =new ArrayList<>();

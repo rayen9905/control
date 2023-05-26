@@ -17,5 +17,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
   User findBypin(@Param("em")String codepin);
   @Query(value = "select * from user where code_uid = :em",nativeQuery=true)
   User findByuid(@Param("em")String codeuid);
+  @Query(value = "select * from user where email = :em",nativeQuery=true)
+  User findByEmail1(@Param("em")String email);
 
 }

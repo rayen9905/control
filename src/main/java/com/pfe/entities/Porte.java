@@ -1,11 +1,9 @@
 package com.pfe.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,12 +25,11 @@ public class Porte {
 	
 	@Column(name = "Nom_Porte", length = 50)
 	private String NomPorte;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type", length = 50)
+	private Type_Prt type;
 	@Column(name = "Num_Porte")
 	private int NumPorte;
-	@Enumerated(EnumType.STRING)
-	@Column(name = "Type", length = 50, nullable = false)
-	private TypePorte Type;
-	
 	@OneToMany(mappedBy="prt",cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnoreProperties("prt")
 	private List<Lecteur> lecteur= new ArrayList<>();
@@ -44,5 +41,5 @@ public class Porte {
 	@OneToOne
 	@JsonIgnoreProperties("prt")
 	private WaveShare wsh;
-	
+
 }

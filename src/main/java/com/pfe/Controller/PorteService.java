@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pfe.DTO.PorteDto;
-import com.pfe.entities.Controlleur;
-import com.pfe.entities.Lecteur;
-import com.pfe.entities.Porte;
-import com.pfe.entities.User;
+import com.pfe.entities.*;
 import com.pfe.repos.PorteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +42,7 @@ static PorteDto dt;
 	  }
 
 	//@GetMapping(value="/getadr")
-	public Porte getbyadr(String mac){
+	public Porte getbyadr(Long mac){
 		//mac="9ca525b998e4";
 		Porte p= prtr.findByadresse(mac);
 		return p;
@@ -93,4 +90,9 @@ static PorteDto dt;
    public Porte getBysn(Long a, int b){
 		return prtr.findBynum(a,b);
 }
+	@GetMapping(value="/countall")
+	public int countAllporte() {
+
+		return prtr.findAll().size();
+	}
 }

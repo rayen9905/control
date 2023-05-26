@@ -1,12 +1,9 @@
 package com.pfe.DTO;
 
 import com.pfe.entities.*;
-import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Builder
@@ -19,7 +16,7 @@ public class PorteDto {
     private String NomPorte;
     private List<LecteurDto> lec;
     private List<UserDto> usr;
-    private TypePorte Type;
+    private Type_Sens Type;
     private String idwave;
     private DepartementDto dep;
 

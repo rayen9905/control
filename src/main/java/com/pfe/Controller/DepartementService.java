@@ -91,4 +91,9 @@ DepartementDto dt;
 	public Departement getone(@PathVariable Long id){
 		return depr.getById(id);
 	}
+	@GetMapping(value="/countall")
+	public int countAlldep() {
+
+		return depr.findAll().size();
+	}
 }

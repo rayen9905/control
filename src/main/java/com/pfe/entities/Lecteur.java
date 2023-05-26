@@ -21,9 +21,7 @@ import java.time.LocalDate;
 public class Lecteur {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-private Long IdLecteur;
-	@Column(name = "Ip_Adresse", length = 500)
-private String IpAdresse;
+     private Long IdLecteur;
 	@Column(name = "Etat_Lecteur", length = 500)
 	private String EtatLecteur;
 	@Column(name = "Num_Lecteur")

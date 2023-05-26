@@ -36,6 +36,8 @@ private Long IdCont;
 private String NomCont;
 	@Column(name = "Serial_Number")
 	private String Serial_Number;
+	@Column(name = "Nbr_Porte")
+	private int NbrPorte;
 
 @Enumerated(EnumType.STRING)
 @Column(name = "Status", length = 50, nullable = false)

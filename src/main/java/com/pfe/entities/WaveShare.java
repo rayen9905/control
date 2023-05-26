@@ -18,6 +18,8 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class WaveShare {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)//Auto increment
+    private Long Idwave;
     private String Adresse;
     @Column(name = "Status", length = 100)
     private String Status;

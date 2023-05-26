@@ -9,7 +9,10 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public interface WaveRepository extends JpaRepository<WaveShare, String> {
+public interface WaveRepository extends JpaRepository<WaveShare, Long> {
     @Query(value="select count(*) from waveshare where status = :dis and date_status = :d",nativeQuery = true)
     int countdisw (@Param("dis") String dis, @Param("d") LocalDate d);
+
+    @Query(value="select * from waveshare where adresse = :adr",nativeQuery = true)
+    WaveShare getwave (@Param("adr") String adr);
 }

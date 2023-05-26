@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,16 +101,18 @@ ControllerDto dt;
 		return jsonString;
 	}
 	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
-	public ResponseEntity<String> rayen(@PathVariable String cntrl,@PathVariable int dr,@PathVariable String uid) throws IOException, EncodeException, DeploymentException, URISyntaxException {
+	public ResponseEntity<String> rayen(@PathVariable String cntrl,@PathVariable String dr,@PathVariable String uid) throws IOException,NullPointerException, EncodeException, DeploymentException, URISyntaxException {
 		boolean verif1 = false;
 		String uidd;
 		String ps;
 		User u1 = null;
-		Porte ptt;
+		Porte ptt = null;
+		List<Porte> ptrrr=new ArrayList<>();
+		List<Lecteur>let=new ArrayList<>();
 		Historique h = new Historique();
 		LocalDate d=LocalDate.now();
 		client3 c3=new client3();
-
+int vdr=Integer.valueOf(dr);
 		try {
 			 cnt = cntrlr.GetBySn(cntrl);//get by serial number
 			System.out.println(cnt.getNomCont() + "ahawa");
@@ -129,20 +132,32 @@ ControllerDto dt;
 					.body("te3ba la3bed");
 
 		}
+		
 		try{
-			 if (uid.length()==10) {
-				uidd=uid.substring(0,6);
+			 if (uid.length()==12) {
+				uidd=uid.substring(0,8);
 				System.out.println("97 "+uidd);
-				ps=uid.substring(6,10);
+				ps=uid.substring(8,12);
 				System.out.println("99 "+ps);
 				u1 = usrr.findByuid(uidd);
 				 if(!u1.getCodePin().equals(ps)){
 					 System.out.println("98 "+u1.getCodePin());
 					 //verif=false;
 					 //return "ghalta f pin1";
-					 Porte p = prtr.findBynum(cnt.getIdCont(),dr);
+					 ptrrr= cnt.getPorte();
+					 for (Porte p:ptrrr
+					 ) {
+						 let.addAll(p.getLecteur());
+					 }
+					 for (Lecteur l:let
+					 ) {
+						 if(l.getNumLecteur()==vdr){
+							 ptt=l.getPrt();
+						 }
+					 }
+					// Porte p = prtr.findBynum(cnt.getIdCont(),vdr);
 					 h.setUsr(u1);
-					 h.setPrt(p);
+					 h.setPrt(ptt);
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setDateHistorique(LocalDate.now());
 					 h.setTimeHistorique(LocalTime.now());
@@ -158,9 +173,18 @@ ControllerDto dt;
 		}
 				catch(NullPointerException e){
 				//return "ghalta f uid1";
-					Porte p = prtr.findBynum(cnt.getIdCont(),dr);
-					h.setUsr(u1);
-					h.setPrt(p);
+					ptrrr= cnt.getPorte();
+					for (Porte p:ptrrr
+					) {
+						let.addAll(p.getLecteur());
+					}
+					for (Lecteur l:let
+					) {
+						if(l.getNumLecteur()==vdr){
+							ptt=l.getPrt();
+						}
+					}					h.setUsr(u1);
+					h.setPrt(ptt);
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setDateHistorique(LocalDate.now());
 					h.setTimeHistorique(LocalTime.now());
@@ -174,13 +198,22 @@ ControllerDto dt;
 				}
 
 		try{
-		if (uid.length()==6) {
+		if (uid.length()==8) {
 				u1 = usrr.findByuid(uid);
 				 if (u1.getCodePin()!=null) {
 					//return "ghalta f pin2";
-					 Porte p = prtr.findBynum(cnt.getIdCont(),dr);
-					 h.setUsr(u1);
-					 h.setPrt(p);
+					 ptrrr= cnt.getPorte();
+					 for (Porte p:ptrrr
+					 ) {
+						 let.addAll(p.getLecteur());
+					 }
+					 for (Lecteur l:let
+					 ) {
+						 if(l.getNumLecteur()==vdr){
+							 ptt=l.getPrt();
+						 }
+					 }					 h.setUsr(u1);
+					 h.setPrt(ptt);
 					 h.setCause("Utilisateur introuvable erreur du code pin");
 					 h.setDateHistorique(LocalDate.now());
 					 h.setTimeHistorique(LocalTime.now());
@@ -195,9 +228,18 @@ ControllerDto dt;
 		}
 				catch(NullPointerException e){
 				//return "ghalta f uid2";
-					Porte p = prtr.findBynum(cnt.getIdCont(),dr);
-					h.setUsr(u1);
-					h.setPrt(p);
+					ptrrr= cnt.getPorte();
+					for (Porte p:ptrrr
+					) {
+						let.addAll(p.getLecteur());
+					}
+					for (Lecteur l:let
+					) {
+						if(l.getNumLecteur()==vdr){
+							ptt=l.getPrt();
+						}
+					}					h.setUsr(u1);
+					h.setPrt(ptt);
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setDateHistorique(LocalDate.now());
 					h.setTimeHistorique(LocalTime.now());
@@ -209,12 +251,21 @@ ControllerDto dt;
 							.body("te3ba la3bed");
 				}
 		        List<Porte> pdd= cnt.getPorte();
-		         Porte p = prtr.findBynum(cnt.getIdCont(),dr);
-				//Porte p = prtr.getById(dr);
+		ptrrr= cnt.getPorte();
+		for (Porte p:ptrrr
+		) {
+			let.addAll(p.getLecteur());
+		}
+		for (Lecteur l:let
+		) {
+			if(l.getNumLecteur()==vdr){
+				ptt=l.getPrt();
+			}
+		}				//Porte p = prtr.getById(dr);
 				List<Porte> pd = u1.getPrt();
 				for (Porte pt : pd
 				) {
-					if (p.getIdPorte() == pt.getIdPorte()) {
+					if (ptt.getIdPorte() == pt.getIdPorte()) {
 						verif1=true;
 					}
 				}
@@ -222,7 +273,7 @@ ControllerDto dt;
 //					return "ghalta fel beb";
 					//Porte p = prtr.getById(dr);
 					h.setUsr(u1);
-					h.setPrt(p);
+					h.setPrt(ptt);
 					h.setCause("Porte Non Autorisé");
 					h.setDateHistorique(LocalDate.now());
 					h.setTimeHistorique(LocalTime.now());
@@ -236,7 +287,7 @@ ControllerDto dt;
 				}
 		//Porte p = prtr.getById(dr);
 		h.setUsr(u1);
-		h.setPrt(p);
+		h.setPrt(ptt);
 		h.setCause("pas de probléme");
 		h.setDateHistorique(LocalDate.now());
 		h.setTimeHistorique(LocalTime.now());
@@ -248,6 +299,30 @@ ControllerDto dt;
 
 
 	}
+	@GetMapping(value = "/verifcntrl/{id}/{np}")
+	public boolean verifcntrl(@PathVariable Long id,@PathVariable int np){
+			int b = 0;
+		Controlleur c= cntrlr.getById(id);
+		int a= c.getNbrPorte();
+		List<Porte>pr=c.getPorte();
+		for (Porte p:pr
+			 ) {
+			System.out.println(p.getIdPorte());
+			if(p.getType().equals(Type_Prt.valueOf("Porte_Principal"))){
+	            b=b+2;
+			}
+else{
+	b=b+1;
+}
+		}
+		if(np<=a-b){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
 	///////// sawer el materiellllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 	// amélioration de pris de décision
 //liason entre historique et event

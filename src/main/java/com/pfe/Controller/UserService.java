@@ -7,8 +7,10 @@ import java.util.Optional;
 import com.pfe.DTO.UserDto;
 import com.pfe.entities.Controlleur;
 import com.pfe.entities.Porte;
+import com.pfe.entities.Refreshtoken;
 import com.pfe.entities.User;
 import com.pfe.repos.PorteRepository;
+import com.pfe.repos.RefreshTokenRepository;
 import com.pfe.repos.UserRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ public class UserService {
 	private service_email emailService;
 @Autowired(required=true)
 UserRepository usrr;
+	@Autowired(required=true)
+	RefreshTokenRepository rr;
 	@Autowired(required=true)
 	PorteRepository prtr;
 	UserDto dt;
@@ -70,6 +74,12 @@ public ResponseEntity<User> adduser(@RequestBody User user,@PathVariable List<Lo
 public User updateuser(@RequestBody User u) {
 	return usrr.save(u);
 }
+	@PutMapping(value="/updateps/{id}/{ps}")
+	public User updateuser(@PathVariable int id,@PathVariable String ps) {
+		User u=usrr.getById(id);
+		u.setPassword(passwordEncoder().encode(ps));
+		return usrr.save(u);
+	}
 
 @PutMapping(value="/update/{id}")
 public ResponseEntity<Void> updateUser(@PathVariable int id, @RequestBody User user) {
@@ -127,14 +137,68 @@ public List<UserDto> getAllUsers() {
 	}
 
 
-	@PostMapping("/send-email/{rec}")
+	@PostMapping("/send-email-ps/{rec}")
 	public String sendEmail(@PathVariable String rec) {
-		try {
-			emailService.sendEmail(rec, "bech naba3thou email nbetou zok om 3amin", "ahla bik fagasna");
-			return "Email sent successfully.";
-		} catch (MessagingException e) {
-			return "Failed to send email: " + e.getMessage();
+		User u =findbyem(rec);
+		if(u==null) {
+
+			try {
+				emailService.sendEmail(rec, "mot de passe oublié", "salut monsieur le responsable j'ai oublié mon mot de passe j'éspére me donner un nouveau mot de passe");
+				return "Email sent successfully.";
+			} catch (MessagingException e) {
+				return "Failed to send email: " + e.getMessage();
+			}
 		}
+		else{
+			return "user not found";
+		}
+	}
+	@PostMapping("/send-email/{rec}")
+	public String sendEmailps(@PathVariable String rec) {
+		User u =findbyem(rec);
+		if(u==null) {
+
+			try {
+				emailService.sendEmail(rec, "nouveau mot de passe", "salut monsieur :"+u.getUsername()+" voila ton email:"+u.getEmail()+"et ton nouveau mot de passe:"+u.getPassword());
+				return "Email sent successfully.";
+			} catch (MessagingException e) {
+				return "Failed to send email: " + e.getMessage();
+			}
+		}
+		else{
+			return "user not found";
+		}
+	}
+	@PostMapping("/send-emaill/{rec}")
+	public String sendEmailAdd(@PathVariable String rec) {
+		User u =findbyem(rec);
+		if(u==null) {
+
+			try {
+				emailService.sendEmail(rec, "nouveau Compte", "salut monsieur :"+u.getUsername()+" voila ton email:"+u.getEmail()+"et ton mot de passe:"+u.getPassword());
+				return "Email sent successfully.";
+			} catch (MessagingException e) {
+				return "Failed to send email: " + e.getMessage();
+			}
+		}
+		else{
+			return "user not found";
+		}
+	}
+	@GetMapping(value="/countall")
+	public int countAllUser() {
+
+		return usrr.findAll().size();
+	}
+	@GetMapping(value="/findbyem/{em}")
+	public User findbyem (@PathVariable String em) {
+		return usrr.findByEmail1(em);
+	}
+	@GetMapping(value="/getref/{em}")
+	public String getref (@PathVariable String em) {
+		User u=findbyem(em);
+	String s=rr.findByRefToken(u.getId()).getToken();
+	return s;
 	}
 
 }

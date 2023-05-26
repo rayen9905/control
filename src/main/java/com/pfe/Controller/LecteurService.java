@@ -98,8 +98,8 @@ public class LecteurService {
 		 String jsonString = objectMapper.writeValueAsString(jsonObject);
 		return jsonString;
 	}
-	@GetMapping(value = "/connected/{cn}/{np}/{nl}")
-public void connected(@PathVariable String cn,@PathVariable int np, @PathVariable int nl) throws DeploymentException, URISyntaxException, IOException, EncodeException {
+	@GetMapping(value = "/connected/{cn}/{nl}")
+public void connected(@PathVariable String cn, @PathVariable int nl) throws DeploymentException, URISyntaxException, IOException, EncodeException {
 		List<Porte>lp=new ArrayList<>();
 		List<Lecteur>ll=new ArrayList<>();
 		Controlleur c =cntrl.GetBySn(cn);
@@ -107,14 +107,14 @@ public void connected(@PathVariable String cn,@PathVariable int np, @PathVariabl
 		lp=c.getPorte();
 		for (Porte p:lp
 			 ) {
-			if(p.getNumPorte()==np)
-			ll.addAll(p.getLecteur());
-		}
-		for (Lecteur l:ll
-			 ) {
-			if(l.getNumLecteur()==nl){
-				ld=l;
+			ll=p.getLecteur();
+			for (Lecteur l:ll
+			) {
+				if(l.getNumLecteur()==nl){
+					ld=l;
+				}
 			}
+
 		}
 		client2 c2=new client2();
 		LocalDate olddate=ld.getDateStatus();
@@ -123,8 +123,8 @@ public void connected(@PathVariable String cn,@PathVariable int np, @PathVariabl
 		lecr.save(ld);
 		c2.sendMessage(statutdevice("Connected",olddate));
 	}
-	@GetMapping(value = "/disconnected/{cn}/{np}/{nl}")
-	public void disconnected(@PathVariable String cn,@PathVariable int np, @PathVariable int nl) throws DeploymentException, URISyntaxException, IOException, EncodeException {
+	@GetMapping(value = "/disconnected/{cn}/{nl}")
+	public void disconnected(@PathVariable String cn, @PathVariable int nl) throws DeploymentException, URISyntaxException, IOException, EncodeException {
 		List<Porte>lp=new ArrayList<>();
 		List<Lecteur>ll=new ArrayList<>();
 		Controlleur c =cntrl.GetBySn(cn);
@@ -132,14 +132,14 @@ public void connected(@PathVariable String cn,@PathVariable int np, @PathVariabl
 		lp=c.getPorte();
 		for (Porte p:lp
 		) {
-			if(p.getNumPorte()==np)
-				ll.addAll(p.getLecteur());
-		}
-		for (Lecteur l:ll
-		) {
-			if(l.getNumLecteur()==nl){
-				ld=l;
+			ll=p.getLecteur();
+			for (Lecteur l:ll
+			) {
+				if(l.getNumLecteur()==nl){
+					ld=l;
+				}
 			}
+
 		}
 		client2 c2=new client2();
 		//LocalDate olddate=ld.getDateStatus();

@@ -57,6 +57,9 @@ public class User implements UserDetails {
   private List<Token> tokens;
   @Enumerated(EnumType.STRING)
   private Role role;
+    @OneToOne
+    //@JsonIgnoreProperties("user")
+    private Refreshtoken ref;
 
 
   @Override
