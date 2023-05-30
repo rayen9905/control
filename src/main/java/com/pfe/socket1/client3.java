@@ -25,7 +25,11 @@ public class client3 {
     }
 
     public void sendMessage(String message) throws IOException, EncodeException {
-        session.getBasicRemote().sendText(message);
+
+            session.getBasicRemote().sendText(message);
+      /* }catch (IllegalArgumentException e){
+
+        }*/
     }
 
     @OnOpen

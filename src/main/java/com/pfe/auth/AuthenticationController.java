@@ -1,5 +1,7 @@
 package com.pfe.auth;
 
+import com.pfe.entities.User;
+import com.pfe.entities.Visiteur;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +19,13 @@ public class AuthenticationController {
 
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(
-      @RequestBody RegisterRequest request
+      @RequestBody User request
   ) {
     return ResponseEntity.ok(service.register(request));
   }
   @PostMapping("/registerAdmin")
   public ResponseEntity<AuthenticationResponse> registerAdmin(
-          @RequestBody RegisterRequest request
+          @RequestBody User request
   ) {
     return ResponseEntity.ok(service.registerAdmin(request));
   }

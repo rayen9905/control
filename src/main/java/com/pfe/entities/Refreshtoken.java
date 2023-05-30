@@ -26,6 +26,6 @@ public class Refreshtoken {
     public boolean expired;
 
     @OneToOne
-    //@JoinColumn(name = "ref")
+    @JoinColumn(name = "ref")
     public User user;
 }

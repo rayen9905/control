@@ -159,7 +159,7 @@ public class HistoriqueService {
 		List<Historique> his1=new ArrayList<>();
 		for (Historique h: his
 			 ) {
-			if(h.getPrt().getCntrl().getDept().getNomDep()==dep){
+			if(h.getPrt().getCntrl().getDept().getNomDep().equals(dep)){
 				his1.add(h);
 			}
 		}

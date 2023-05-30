@@ -1,8 +1,10 @@
 package com.pfe.config;
 
 
+import com.pfe.Controller.UserService;
 import com.pfe.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,10 +21,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig {
 
   private final UserRepository repository;
+  @Autowired
+  private final UserService repository1;
+
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    return username -> repository1.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 
   @Bean

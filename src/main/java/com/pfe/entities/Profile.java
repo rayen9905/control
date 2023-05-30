@@ -30,6 +30,6 @@ public class Profile {
 	private String NomProfile;
 	@OneToMany(mappedBy="prof")
 	@JsonIgnoreProperties("prof")
-	private List<User> usr;
+	private List<Visiteur> usr;
 
 }

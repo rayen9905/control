@@ -1,5 +1,6 @@
 package com.pfe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,6 +35,7 @@ public class Token {
   public boolean expired;
 
   @ManyToOne
+  @JsonIgnoreProperties("tokens")
   @JoinColumn(name = "user_id")
   public User user;
 }

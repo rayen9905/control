@@ -31,7 +31,7 @@ private Long IdHis;
 private Porte prt;
 @ManyToOne
 @JoinColumn(name = "IdUser")
-private User usr;
+private Visiteur usr;
 private Long IdEvent;
 
 private String cause;

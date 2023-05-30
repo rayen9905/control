@@ -2,6 +2,7 @@ package com.pfe.auth;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pfe.Controller.UserService;
 import com.pfe.config.JwtService;
 import com.pfe.entities.*;
 import com.pfe.repos.RefreshTokenRepository;
@@ -10,9 +11,12 @@ import com.pfe.repos.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationService {
   private final UserRepository repository;
+  @Autowired
+  private final UserService repository1;
+
   private final TokenRepository tokenRepository;
   private final RefreshTokenRepository refreshtokenRepository;
   private final UserRepository UserRepository;
@@ -30,17 +37,29 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
-  public AuthenticationResponse register(RegisterRequest request) {
-    var user = User.builder()
+  public AuthenticationResponse register(User request) {
+    User in=new User();
+    request.setPassword(passwordEncoder().encode(request.getPassword()));
+    in=request;
+   /* in.setFirstname(request.getFirstname());
+    in.setLastname(request.getLastname());
+    in.setPhone(request.getPhone());
+    in.setAdresse(request.getAdresse());
+    in.setImage(request.getImage());
+    in.setRole(request.getRole());
+    in.setEmail(request.getEmail());
+    in.setPassword(request.getPassword());
+    in.setRole(Role.USER);*/
+    /*var user = inv.builder().build()
         .firstname(request.getFirstname())
         .lastname(request.getLastname())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
         .role(Role.USER)
-        .build();
-    var savedUser = repository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
+        .build();*/
+    var savedUser = repository.save(in);
+    var jwtToken = jwtService.generateToken(in);
+    var refreshToken = jwtService.generateRefreshToken(in);
 
     saveUserToken(savedUser, jwtToken);
     saveUserrefreshToken(savedUser, refreshToken);
@@ -49,17 +68,25 @@ public class AuthenticationService {
             .refreshToken(refreshToken)
         .build();
   }
-  public AuthenticationResponse registerAdmin(RegisterRequest request) {
-    var user = User.builder()
+  public AuthenticationResponse registerAdmin(User request) {
+   /* var user = User.builder()
             .firstname(request.getFirstname())
             .lastname(request.getLastname())
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.ADMIN)
-            .build();
-    var savedUser = repository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
+            .build();*/
+    User in=new User();
+    request.setPassword(passwordEncoder().encode(request.getPassword()));
+    in=request;
+    /*in.setFirstname(request.getFirstname());
+    in.setLastname(request.getLastname());
+    in.setEmail(request.getEmail());
+    in.setPassword(request.getPassword());
+    in.setRole(Role.USER);*/
+    var savedUser = repository.save(in);
+    var jwtToken = jwtService.generateToken(in);
+    var refreshToken = jwtService.generateRefreshToken(in);
 
     saveUserToken(savedUser, jwtToken);
     return AuthenticationResponse.builder()
@@ -75,7 +102,7 @@ public class AuthenticationService {
             request.getPassword()
         )
     );
-    var user = repository.findByEmail(request.getEmail())
+    var user = repository1.findByEmail(request.getEmail())
         .orElseThrow();
     var jwtToken = jwtService.generateToken(user);
     revokeAllUserTokens(user);
@@ -91,7 +118,7 @@ public class AuthenticationService {
                     request.getPassword()
             )
     );*/
-    var user = repository.findByEmail(email)
+    var user = repository1.findByEmail(email)
             .orElseThrow();
     var jwtRefreshToken = jwtService.generateRefreshToken(user);
     revokeAllUserRefreshTokens(user);
@@ -119,9 +146,9 @@ public class AuthenticationService {
             .expired(false)
             .revoked(false)
             .build();
+    refreshtokenRepository.save(token);
     user.setRef(token);
     UserRepository.save(user);
-    refreshtokenRepository.save(token);
   }
 
   private void revokeAllUserRefreshTokens(User user) {
@@ -154,7 +181,7 @@ public class AuthenticationService {
     refreshToken = authHeader.substring(7);
     userEmail = jwtService.extractUsername(refreshToken);
     if (userEmail != null) {
-      var user = this.repository.findByEmail(userEmail)
+      var user = this.repository1.findByEmail(userEmail)
               .orElseThrow();
       var isTokenValid = refreshtokenRepository.findByToken(refreshToken)
               .map(t -> !t.isExpired() && !t.isRevoked())
@@ -205,4 +232,8 @@ public class AuthenticationService {
     filterChain.doFilter(request, response);
   }
 }*/
+  @Bean
+  private PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }

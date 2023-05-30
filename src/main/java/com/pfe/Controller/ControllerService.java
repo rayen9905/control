@@ -44,6 +44,8 @@ public class ControllerService {
 		@Autowired(required=true)
 		ControllerRepository cntrlr;
 	@Autowired(required=true)
+	UserService usr;
+	@Autowired(required=true)
 	PorteRepository prtr;
 	PorteDto dtt;
 	@Autowired(required=true)
@@ -85,27 +87,50 @@ ControllerDto dt;
 	public Controlleur getone(@PathVariable Long id){
 		return cntrlr.getById(id);
 	}
-	public String send(Historique h) throws JsonProcessingException {
+	public String send(Historique h) throws JsonProcessingException, NullPointerException {
+
+			//String jsonString = null;
+			Map<String, Object> jsonObject = new HashMap<>();
+			jsonObject.put("idhis", h.getIdHis());
+			jsonObject.put("date", h.getDateHistorique());
+			jsonObject.put("time", h.getTimeHistorique());
+			jsonObject.put("nomporte", h.getPrt().getNomPorte());
+			jsonObject.put("Departement", h.getPrt().getCntrl().getDept().getNomDep());
+			jsonObject.put("etat", h.getEtatHistorique());
+			jsonObject.put("cause", h.getCause());
+			jsonObject.put("idevent", h.getIdEvent());
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.registerModule(new JavaTimeModule());
+			String jsonString = objectMapper.writeValueAsString(jsonObject);
+		return jsonString;
+
+		//return jsonString;
+
+	}
+	public String send1(Historique h) throws JsonProcessingException, NullPointerException {
+
+		//String jsonString = null;
 		Map<String, Object> jsonObject = new HashMap<>();
-		jsonObject.put("idhis",h.getIdHis());
-		jsonObject.put("date",h.getDateHistorique());
-		jsonObject.put("time",h.getTimeHistorique());
-		jsonObject.put("nomporte",h.getPrt().getNomPorte());
-		jsonObject.put("Departement",h.getPrt().getCntrl().getDept().getNomDep());
-		jsonObject.put("etat",h.getEtatHistorique());
-		jsonObject.put("cause",h.getCause());
-		jsonObject.put("idevent",h.getIdEvent());
+		jsonObject.put("idhis", h.getIdHis());
+		jsonObject.put("date", h.getDateHistorique());
+		jsonObject.put("time", h.getTimeHistorique());
+		jsonObject.put("etat", h.getEtatHistorique());
+		jsonObject.put("cause", h.getCause());
+		jsonObject.put("idevent", h.getIdEvent());
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 		String jsonString = objectMapper.writeValueAsString(jsonObject);
 		return jsonString;
+
+		//return jsonString;
+
 	}
 	@GetMapping(value="/des/{cntrl}/{dr}/{uid}")
 	public ResponseEntity<String> rayen(@PathVariable String cntrl,@PathVariable String dr,@PathVariable String uid) throws IOException,NullPointerException, EncodeException, DeploymentException, URISyntaxException {
 		boolean verif1 = false;
 		String uidd;
 		String ps;
-		User u1 = null;
+		Visiteur u1 = null;
 		Porte ptt = null;
 		List<Porte> ptrrr=new ArrayList<>();
 		List<Lecteur>let=new ArrayList<>();
@@ -116,7 +141,7 @@ int vdr=Integer.valueOf(dr);
 		try {
 			 cnt = cntrlr.GetBySn(cntrl);//get by serial number
 			System.out.println(cnt.getNomCont() + "ahawa");
-		}catch(EntityNotFoundException e){
+		}catch(NullPointerException | EntityNotFoundException e ){
 			//return "ghalta fel controlleur";
 			//Porte p = prtr.getById(dr);
 			//h.setUsr(u1);
@@ -126,7 +151,7 @@ int vdr=Integer.valueOf(dr);
 			h.setEtatHistorique("accès refusé");
 			h.setCause("erreur du controlleur");
 			hisr.save(h);
-			String info=send(h);
+			String info=send1(h);
 			c3.sendMessage(info);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("te3ba la3bed");
@@ -139,7 +164,7 @@ int vdr=Integer.valueOf(dr);
 				System.out.println("97 "+uidd);
 				ps=uid.substring(8,12);
 				System.out.println("99 "+ps);
-				u1 = usrr.findByuid(uidd);
+				u1 = usr.findByuid(uidd);
 				 if(!u1.getCodePin().equals(ps)){
 					 System.out.println("98 "+u1.getCodePin());
 					 //verif=false;
@@ -183,7 +208,8 @@ int vdr=Integer.valueOf(dr);
 						if(l.getNumLecteur()==vdr){
 							ptt=l.getPrt();
 						}
-					}					h.setUsr(u1);
+					}
+					h.setUsr(u1);
 					h.setPrt(ptt);
 					h.setCause("Utilisateur introuvable erreur du code uid");
 					h.setDateHistorique(LocalDate.now());
@@ -199,7 +225,7 @@ int vdr=Integer.valueOf(dr);
 
 		try{
 		if (uid.length()==8) {
-				u1 = usrr.findByuid(uid);
+				u1 = usr.findByuid(uid);
 				 if (u1.getCodePin()!=null) {
 					//return "ghalta f pin2";
 					 ptrrr= cnt.getPorte();
