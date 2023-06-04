@@ -47,7 +47,8 @@ public class WaveService {
         return waver.getById(
                 "9ca525b998e4");}*/
 
-public WaveShare getwbyid(String mac){
+    @GetMapping(value="/aaa/{mac}")
+    public WaveShare getwbyid(@PathVariable String mac){
         return waver.getwave(mac);
 }
     @DeleteMapping(value="/delete/{id}")

@@ -44,6 +44,8 @@ public class MyController {
     private WaveService ws;
     @Autowired(required=true)
     private WaveRepository wss;
+
+
     public String send(Historique h) throws JsonProcessingException {
         Map<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("idhis",h.getIdHis());
@@ -221,6 +223,7 @@ public class MyController {
             System.out.println(d);
             System.out.println(c);*/
             wh= ws.getwbyid(b);
+            System.out.println(wh.getAdresse());
             LocalDate olddate=wh.getDateStatus();
             wh.setStatus("Connected");
             wh.setDateStatus(LocalDate.now());

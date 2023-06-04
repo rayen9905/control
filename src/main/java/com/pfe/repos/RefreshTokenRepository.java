@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface RefreshTokenRepository extends JpaRepository<Refreshtoken, Integer> {
     @Query(value = "select * from refreshtoken where token = :em",nativeQuery=true)
     Optional<Refreshtoken> findByToken(@Param("em")String token);
-    @Query(value = "select * from refreshtoken where user_id = :em",nativeQuery=true)
+    @Query(value = "select * from refreshtoken where ref = :em",nativeQuery=true)
     Refreshtoken findByRefToken(@Param("em")int id);
     @Query(value = """
       select t from Refreshtoken t inner join User u\s

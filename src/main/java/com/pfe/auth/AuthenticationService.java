@@ -8,6 +8,7 @@ import com.pfe.entities.*;
 import com.pfe.repos.RefreshTokenRepository;
 import com.pfe.repos.TokenRepository;
 import com.pfe.repos.UserRepository;
+import com.pfe.repos.VisiteurRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class AuthenticationService {
   private final TokenRepository tokenRepository;
   private final RefreshTokenRepository refreshtokenRepository;
   private final UserRepository UserRepository;
+  private final VisiteurRepository VisRepository;
 
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
@@ -148,7 +150,7 @@ public class AuthenticationService {
             .build();
     refreshtokenRepository.save(token);
     user.setRef(token);
-    UserRepository.save(user);
+    VisRepository.save(user);
   }
 
   private void revokeAllUserRefreshTokens(User user) {
@@ -159,6 +161,8 @@ public class AuthenticationService {
       token.setExpired(true);
       token.setRevoked(true);
     });*/
+    user.setRef(null);
+    VisRepository.save(user);
     refreshtokenRepository.deleteAll(validUserTokens);
   }
   private void revokeAllUserTokens(User user) {

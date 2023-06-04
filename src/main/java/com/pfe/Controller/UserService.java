@@ -35,30 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin("*")
 public class UserService {
 	@Autowired
-	private ResourceLoader resourceLoader;
-	Resource resource = resourceLoader.getResource("classpath:images/your_image_filename.jpg");
-
-	@Value("${upload.directory}")
-	private String uploadDirectory; // Path to the directory where you want to store the uploaded files
-
-	@PostMapping("/upload")
-	public ResponseEntity<String> uploadFile(@RequestBody MultipartFile file) {
-		if (file != null && !file.isEmpty()) {
-			try {
-				String filePath = uploadDirectory + File.separator + file.getOriginalFilename();
-				File dest = new File(filePath);
-				file.transferTo(dest);
-
-				return new ResponseEntity<>("Image uploaded successfully.", HttpStatus.OK);
-			} catch (IOException e) {
-				return new ResponseEntity<>("Error occurred while uploading the image.", HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		}
-
-		return new ResponseEntity<>("No file selected.", HttpStatus.BAD_REQUEST);
-	}
-
-	@Autowired
 	private service_email emailService;
 	@Autowired(required = true)
 	VisiteurRepository usrr;
@@ -215,13 +191,13 @@ public UserDetails loadUserByUsername(@PathVariable String idd)throws UsernameNo
 		}
 	}
 
-	@PostMapping("/send-email/{rec}")
-	public String sendEmailps(@PathVariable String rec) {
+	@PostMapping("/send-email/{rec}/{ps}")
+	public String sendEmailps(@PathVariable String rec,@PathVariable String ps) {
 		User u = findbyem(rec);
 		if (u != null) {
 
 			try {
-				emailService.sendEmail(rec, "nouveau mot de passe", "salut monsieur :" + u.getLastname() + " voila ton email:" + u.getEmail() + "et ton nouveau mot de passe:" + u.getPassword());
+				emailService.sendEmail(rec, "nouveau mot de passe", "salut monsieur :" + u.getLastname() + " voila ton email:" + u.getEmail() + "et ton nouveau mot de passe:" + ps);
 				return "Email sent successfully.";
 			} catch (MessagingException e) {
 				return "Failed to send email: " + e.getMessage();
@@ -231,13 +207,13 @@ public UserDetails loadUserByUsername(@PathVariable String idd)throws UsernameNo
 		}
 	}
 
-	@PostMapping("/send-emaill/{rec}")
-	public String sendEmailAdd(@PathVariable String rec) {
+	@PostMapping("/send-emaill/{rec}/{ps}")
+	public String sendEmailAdd(@PathVariable String rec , @PathVariable String ps) {
 		User u = findbyem(rec);
 		if (u != null) {
 
 			try {
-				emailService.sendEmail(rec, "nouveau Compte", "salut monsieur :" + u.getFirstname() + " voila ton email:" + u.getEmail() + "et ton mot de passe:" + u.getPassword());
+				emailService.sendEmail(rec, "nouveau Compte", "salut monsieur :" + u.getFirstname() + " voila ton email:" + u.getEmail() + "et ton mot de passe:" + ps);
 				return "Email sent successfully.";
 			} catch (MessagingException e) {
 				return "Failed to send email: " + e.getMessage();
@@ -251,6 +227,25 @@ public UserDetails loadUserByUsername(@PathVariable String idd)throws UsernameNo
 	public int countAllUser() {
 
 		return usrr.findAll().size();
+	}
+	@GetMapping(value="/findbyem/{em}")
+	public User findbyemm(@PathVariable String em) {
+		List<User> u = viss.findAll();
+		//return u;
+		User f = null;
+		for (User uu : u
+		) {
+			//System.out.println("ahayaaaa1");
+			//System.out.println(uu.getEmail());
+			if (uu.getEmail().equals(em)) {
+				//f = new Visiteur();
+
+				//System.out.println("ahayaaaa2");
+				f = uu;
+			}
+		}
+		return f;
+
 	}
 	public User findbyem(String em) {
 		List<User> u = viss.findAll();
@@ -277,7 +272,6 @@ public UserDetails loadUserByUsername(@PathVariable String idd)throws UsernameNo
 		String s = rr.findByRefToken(u.getId()).getToken();
 		return s;
 	}
-	//@GetMapping(value = "/farejj")
 	public Optional<User> findByEmail(String em) {
 		List<User> u = viss.findAll();
 		//return u;
@@ -348,6 +342,20 @@ public UserDetails loadUserByUsername(@PathVariable String idd)throws UsernameNo
 			}
 		}
 		return f;
+	}
+	@PostMapping("/api/upload")
+	public ResponseEntity<String> uploadFile(@RequestPart("file") MultipartFile file) {
+		// Logic to handle the file upload
+		// You can save the file to a directory, process it, etc.
+		// For simplicity, we'll just return a success message
+
+		try {
+			// Save the file to a directory
+			file.transferTo(new File("C:/Users/ayari/OneDrive/Bureau/BACK/Back_With_Heritage/src/main/resources/images/" + file.getOriginalFilename()));
+			return ResponseEntity.ok("File uploaded successfully");
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+		}
 	}
 }
 

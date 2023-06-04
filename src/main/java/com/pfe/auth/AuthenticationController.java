@@ -4,6 +4,7 @@ import com.pfe.entities.User;
 import com.pfe.entities.Visiteur;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +36,11 @@ public class AuthenticationController {
   ) {
     return ResponseEntity.ok(service.authenticate(request));
   }
-  @PostMapping("/refresh-token")
+  @GetMapping("/refresh-token")
   public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
     service.refreshToken(request, response);
   }
-  @PostMapping("/Reload-refresh-token/{email}")
+  @GetMapping("/Reload-refresh-token/{email}")
   public void ReloadrefreshToken(@PathVariable String email) throws IOException {
     service.ReloadRefresh(email);
   }

@@ -147,10 +147,20 @@ public class EventService {
     @PostMapping("/filterEV")
     public List<Event> filtrer(@RequestBody FilterEv fe) {
         Specification<Event> spec = Specification.where(null);
-        if ((fe.getTypeEv() != null)&&(fe.getTypeEv() !="Entry_Open")&&(fe.getTypeEv() !="Entry_Close")&&(fe.getTypeEv() !="Exist_Open")&&(fe.getTypeEv() !="Exist_Close")) {
+        List<Type_Evt>a=new ArrayList<>();
+        a.add(Type_Evt.Intrusion_Alarm);
+        a.add(Type_Evt.Reverse_Alarm);
+        a.add(Type_Evt.Stayed_On);
+        a.add(Type_Evt.Tailing_Alarm);
+        //(fe.getTypeEv() !="Entry_Open")&&(fe.getTypeEv() !="Entry_Close")&&(fe.getTypeEv() !="Exist_Open")&&(fe.getTypeEv() !="Exist_Close")
+        if (fe.getTypeEv() != null) {
             Type_Evt myEnum = Type_Evt.valueOf(fe.getTypeEv());
             spec = spec.and((root, query, builder) ->
                     builder.equal(root.get("EtEvent"), myEnum));
+        }
+        else {
+            spec = spec.and((root, query, builder) ->
+                    root.get("EtEvent").in(a));
         }
 
         if (fe.getDateDeb() != null) {
@@ -177,10 +187,19 @@ public class EventService {
     @PostMapping("/filterEV1")
     public List<Event> filtrer1(@RequestBody FilterEv fe) {
         Specification<Event> spec = Specification.where(null);
-        if ((fe.getTypeEv() != null)&&(fe.getTypeEv() !="Intrusion_Alarm")&&(fe.getTypeEv() !="Reverse_Alarm")&&(fe.getTypeEv() !="Stayed_On")&&(fe.getTypeEv() !="Tailing_Alarm")) {
+        List<Type_Evt>a=new ArrayList<>();
+        a.add(Type_Evt.Exist_Close);
+        a.add(Type_Evt.Exist_Open);
+        a.add(Type_Evt.Entry_Open);
+        a.add(Type_Evt.Entry_Close);
+        if (fe.getTypeEv() != null) {
             Type_Evt myEnum = Type_Evt.valueOf(fe.getTypeEv());
             spec = spec.and((root, query, builder) ->
                     builder.equal(root.get("EtEvent"), myEnum));
+        }
+        else {
+            spec = spec.and((root, query, builder) ->
+                    root.get("EtEvent").in(a));
         }
 
         if (fe.getDateDeb() != null) {

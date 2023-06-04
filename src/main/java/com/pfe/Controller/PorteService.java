@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.pfe.DTO.PorteDto;
 import com.pfe.entities.*;
+import com.pfe.repos.ControllerRepository;
 import com.pfe.repos.PorteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PorteService {
 	@Autowired(required=true)
 	PorteRepository prtr;
+	@Autowired(required=true)
+	ControllerRepository cntrr;
 static PorteDto dt;
 	private Porte prt;
 
@@ -95,4 +98,42 @@ static PorteDto dt;
 
 		return prtr.findAll().size();
 	}
+	@GetMapping(value="/getDoorsCnt/{idc}")
+	public List<PorteDto> verifprt(@PathVariable Long idc) {
+Controlleur c=cntrr.getById(idc);
+int a = c.getNbrPorte();
+List<Porte>p =c.getPorte();
+List<Lecteur>l=new ArrayList<>();
+List<Integer>num=new ArrayList<>();
+		List<Integer>numf=new ArrayList<>(a);
+		List<PorteDto>prt=new ArrayList<>();
+
+		for (Porte pr:p
+			 ) {
+			l.addAll(pr.getLecteur());
+		}
+		for (Lecteur ll:l
+			 ) {
+numf.add(ll.getNumLecteur());
+		}
+		for (int i=numf.size();i<a;i++){
+			//if(numf.get(i)==null){
+				numf.add(i,0);
+			//}
+		}
+		for (int i=0;i<numf.size();i++){
+			PorteDto pdt=new PorteDto();
+			if (numf.get(i)!=0){
+				pdt.setNb(numf.get(i));
+				pdt.setColor("Red");
+			}
+			else{
+				pdt.setNb(i+1);
+				pdt.setColor("Green");
+			}
+			prt.add(pdt);
+		}
+		return prt;
+	}
+
 }
