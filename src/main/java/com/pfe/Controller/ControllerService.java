@@ -159,10 +159,10 @@ int vdr=Integer.valueOf(dr);
 		}
 		
 		try{
-			 if (uid.length()==12) {
-				uidd=uid.substring(0,8);
+			 if (uid.length()==14) {
+				uidd=uid.substring(0,10);
 				System.out.println("97 "+uidd);
-				ps=uid.substring(8,12);
+				ps=uid.substring(10,14);
 				System.out.println("99 "+ps);
 				u1 = usr.findByuid(uidd);
 				 if(!u1.getCodePin().equals(ps)){
@@ -226,7 +226,7 @@ int vdr=Integer.valueOf(dr);
 		try{
 		if (uid.length()==8) {
 				u1 = usr.findByuid(uid);
-				 if (u1.getCodePin()!=null) {
+				/* if (u1.getCodePin()!=null) {
 					//return "ghalta f pin2";
 					 ptrrr= cnt.getPorte();
 					 for (Porte p:ptrrr
@@ -249,7 +249,7 @@ int vdr=Integer.valueOf(dr);
 					 c3.sendMessage(info);
 					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							 .body("te3ba la3bed");
-				 }
+				 }*/
 		}
 		}
 				catch(NullPointerException e){
@@ -276,6 +276,59 @@ int vdr=Integer.valueOf(dr);
 					return ResponseEntity.status(HttpStatus.NOT_FOUND)
 							.body("te3ba la3bed");
 				}
+		try{
+			if (uid.length()==10) {
+				u1 = usr.findByuid(uid);
+				/* if (u1.getCodePin()!=null) {
+					//return "ghalta f pin2";
+					 ptrrr= cnt.getPorte();
+					 for (Porte p:ptrrr
+					 ) {
+						 let.addAll(p.getLecteur());
+					 }
+					 for (Lecteur l:let
+					 ) {
+						 if(l.getNumLecteur()==vdr){
+							 ptt=l.getPrt();
+						 }
+					 }					 h.setUsr(u1);
+					 h.setPrt(ptt);
+					 h.setCause("Utilisateur introuvable erreur du code pin");
+					 h.setDateHistorique(LocalDate.now());
+					 h.setTimeHistorique(LocalTime.now());
+					 h.setEtatHistorique("accès refusé");
+					 hisr.save(h);
+					 String info=send(h);
+					 c3.sendMessage(info);
+					 return ResponseEntity.status(HttpStatus.NOT_FOUND)
+							 .body("te3ba la3bed");
+				 }*/
+			}
+		}
+		catch(NullPointerException e){
+			//return "ghalta f uid2";
+			ptrrr= cnt.getPorte();
+			for (Porte p:ptrrr
+			) {
+				let.addAll(p.getLecteur());
+			}
+			for (Lecteur l:let
+			) {
+				if(l.getNumLecteur()==vdr){
+					ptt=l.getPrt();
+				}
+			}					h.setUsr(u1);
+			h.setPrt(ptt);
+			h.setCause("Utilisateur introuvable erreur du code uid");
+			h.setDateHistorique(LocalDate.now());
+			h.setTimeHistorique(LocalTime.now());
+			h.setEtatHistorique("accès refusé");
+			hisr.save(h);
+			String info=send(h);
+			c3.sendMessage(info);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("te3ba la3bed");
+		}
 		        List<Porte> pdd= cnt.getPorte();
 		ptrrr= cnt.getPorte();
 		for (Porte p:ptrrr

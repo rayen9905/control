@@ -263,6 +263,10 @@ public class EventService {
 
         return evtr.findAll().size();
     }
+    @GetMapping("/type-evt/{id}")
+    public String type(@PathVariable Long id){
+        return evtr.getById(id).getEtEvent().toString();
+    }
 
 
 }

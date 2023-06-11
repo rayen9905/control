@@ -26,11 +26,7 @@ public class WaveService {
     @PostMapping(value="/add")
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     public void addwave(@RequestBody WaveShare wa) {
-        WaveShare wav=new WaveShare();
-        wav.setAdresse(wa.getAdresse());
-        wav.setStatus(wa.getStatus());
-        wav.setPrt(wa.getPrt());
-        waver.save(wav);
+        waver.save(wa);
     }
     public WaveShare updatewave(@RequestBody WaveShare wa) {
         return waver.save(wa);

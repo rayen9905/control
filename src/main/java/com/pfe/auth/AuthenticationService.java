@@ -80,6 +80,7 @@ public class AuthenticationService {
             .build();*/
     User in=new User();
     request.setPassword(passwordEncoder().encode(request.getPassword()));
+    request.setRole(Role.ADMIN);
     in=request;
     /*in.setFirstname(request.getFirstname());
     in.setLastname(request.getLastname());

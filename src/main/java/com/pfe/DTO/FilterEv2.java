@@ -16,5 +16,6 @@ public class FilterEv2 {
     private String timeFin;
     private String etat;
     private Long dep;
+    private String cin;
 
 }

@@ -39,6 +39,8 @@ public class HistoriqueService {
 	private LecteurRepository lr;
 	@Autowired
 	private WaveRepository wr;
+	@Autowired
+	private UserRepository us;
 
 
 	private Historique his;
@@ -167,6 +169,12 @@ public class HistoriqueService {
 		}
 		return  his1.size();
 	}
+	public List<User> getusr(String a){
+		Specification<User> spec = Specification.where(null);
+		spec = spec.and((root, query, builder) ->
+				builder.equal(root.get("Cin"), a));
+		return us.findAll(spec);
+	}
 	@PostMapping("/filterEV1")
 	public List<Historique> filtrer1(@RequestBody FilterEv2 fe) {
 		Specification<Historique> spec = Specification.where(null);
@@ -191,6 +199,11 @@ public class HistoriqueService {
 			LocalTime localTimee2 = LocalTime.parse(fe.getTimeFin(), formatter);
 			spec = spec.and((root, query, builder) ->
 					builder.between(root.get("TimeHistorique"),localTimee1,localTimee2));
+		}
+		if (fe.getCin() != null) {
+			User u=getusr(fe.getCin()).get(0);
+			spec = spec.and((root, query, builder) ->
+					builder.equal(root.get("usr"),u));
 		}
 		if (fe.getDep() != null) {
 			Departement d= depr.getById(fe.getDep());

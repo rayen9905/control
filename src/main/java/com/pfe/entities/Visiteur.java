@@ -38,6 +38,8 @@ public abstract class Visiteur {
   private String Adresse;
   @Column(name = "Image", length = 300)
   private String Image;
+  @Column(name = "cin", length = 8)
+  private String Cin;
   @ManyToOne
   @JsonIgnoreProperties("usr")
   private Profile prof;

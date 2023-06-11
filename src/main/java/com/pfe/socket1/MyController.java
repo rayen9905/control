@@ -55,6 +55,7 @@ public class MyController {
         jsonObject.put("Departement",h.getPrt().getCntrl().getDept().getNomDep());
         jsonObject.put("etat",h.getEtatHistorique());
         jsonObject.put("cause",h.getCause());
+        jsonObject.put("usr",h.getUsr().getId());
         jsonObject.put("idevent",h.getIdEvent());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -207,6 +208,7 @@ public class MyController {
         // Connect to the Waveshare device
         //String rep = "9ca525b998e4";
         ServerSocket socket = new ServerSocket(13001);
+        System.out.println(socket);
         CountDownLatch latch = new CountDownLatch(1);
         WebSocketClient client1 = new WebSocketClient();
         client1 client2 = new client1();

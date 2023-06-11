@@ -226,7 +226,7 @@ public UserDetails loadUserByUsername(@PathVariable String idd)throws UsernameNo
 	@GetMapping(value = "/countall")
 	public int countAllUser() {
 
-		return usrr.findAll().size();
+		return viss.findAll().size();
 	}
 	@GetMapping(value="/findbyem/{em}")
 	public User findbyemm(@PathVariable String em) {
